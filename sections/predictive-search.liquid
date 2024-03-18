@@ -1,0 +1,62 @@
+{%- if predictive_search.performed -%}
+  <div class="predictive-search__results" id="predictive-search-results">
+    {%- if predictive_search.resources.pages == blank and predictive_search.resources.products == blank -%}
+      <div class="predictive-search__row">
+        <div class="predictive-search__message">
+          <p>
+            {{- 'search.empty_with_terms' | t: terms: predictive_search.terms -}}
+          </p>
+        </div><!-- /.predictive-search__message -->
+      </div><!-- /.predictive-search__row -->
+    {%- endif -%}
+
+    {%- if predictive_search.resources.pages.size > 0 -%}
+      <div class="predictive-search__row">
+        <h6 class="predictive-search__title">
+          {{- 'search.pages_title' | t -}}
+        </h6><!-- /.predictive-search__title -->
+
+        <ul class="predictive-search__links list-unstyled">
+          {%- for page in predictive_search.resources.pages limit: 8 -%}
+            <li class="predictive-search__links-item">
+              <a href="{{- page.url -}}" class="predictive-search__links-link">
+                {{- page.title -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul><!-- /.list-unstyled -->
+      </div><!-- /.predictive-search__row -->
+    {%- endif -%}
+
+    {%- if predictive_search.resources.products.size > 0 -%}
+      <div class="predictive-search__row">
+        <h6 class="predictive-search__title">
+          {{- 'search.products_title' | t -}}
+        </h6><!-- /.predictive-search__title -->
+
+        {% style %}
+          .predictive-search__grid {
+            column-gap: {{ settings.predictive_search_column_gap_mobile }}rem;
+          }
+          @media screen and (min-width: 990px) {
+            .predictive-search__grid {
+              column-gap: {{ settings.predictive_search_column_gap_desktop }}rem;
+            }
+          }
+        {% endstyle %}
+
+        <div class="predictive-search__grid">
+          {%- for product in predictive_search.resources.products limit: 6 -%}
+            {%- render 'card-product', product_ref: product, hide_actions: true, class: 'predictive-search__card-product', section_id: section.id, title_small: true, card_index: forloop.index, card_product_layout: settings.card_product_layout -%}
+          {%- endfor -%}
+        </div><!-- /.predictive-search__grid -->
+      </div><!-- /.predictive-search__row -->
+    {%- endif -%}
+
+    <div class="predictive-search__row">
+      <button type="submit" class="link predictive-search__link">
+        {{- 'search.search_for' | t: terms: predictive_search.terms -}}
+      </button>
+    </div><!-- /.predictive-search__row -->
+  </div><!-- /.predictive-search__results -->
+{%- endif -%}

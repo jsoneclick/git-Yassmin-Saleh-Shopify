@@ -1,0 +1,148 @@
+<section id="banner-section-{{section.id}}" class="Section {% unless section.settings.image %}Section--spacingNormal{% endunless %}">
+<div class="containercti">
+  <h2 style="text-align: center;
+    letter-spacing: 0px;
+    color: #522E21;
+    opacity: 1;
+    font-size: 40px;
+    margin: auto;">{{ section.settings.subheading }}</h2>
+  <h1 class="subtcti">
+    <span id="petmid" style="text-align: center;
+    font: normal normal bold 50px/65px Quatro Slab;
+    letter-spacing: 0px;
+    color: #522E1F;">{{ section.settings.title }}</span>
+    <span style="font: normal normal normal 50px/55px Futura PT;
+    letter-spacing: 0px;
+    color: #522E1F;">{{ section.settings.title2 }}</span>
+</h1>
+
+  <p class="para2">So it’s so frustrating to see them . . .</p>
+  <img class="img2" src="{{ section.settings.image | img_url: 'master' }}" loading="lazy">
+</div>
+</section>
+
+<style>
+.containercti {
+  position: relative;
+  width: 100%;
+  margin-top: 15%;
+}
+
+
+h1.subtcti {
+    text-align: center;
+    letter-spacing: 0px;
+    width: 54%;
+    margin: auto !important;
+}
+  
+.para2 {
+    color: #522E1F;
+    width: 49%;
+    text-align: center;
+    margin-left: 26%;
+    font-size: 40px;
+    margin-top: 1%;
+}
+
+.img2 {
+  position: relative;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 60%;
+    border-radius: 10px;
+    margin: auto !important;
+}
+
+  /* Page responsiveness */
+@media (max-width: 1440px) {
+}
+@media (max-width: 1366px) {
+}
+@media (max-width: 1280px) {
+
+}
+@media (max-width: 1199px) {
+
+}
+@media (max-width: 1024px) {
+}
+@media (max-width: 991px) {
+}
+@media (max-width: 980px) {
+
+}
+@media (max-width: 768px) {
+  .para2{
+    font-size:22px !important;
+    margin: 0 auto !Important;
+    width: auto !important;
+    padding-top: 5px;
+  }
+
+  span#petmid {
+    font: normal normal bold 37px/44px Quatro Slab !important;
+  }
+
+  h1.subtcti {
+    width: auto !important;
+  }
+
+  .img2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-top: 5%;
+  }
+}
+  
+@media (max-width: 576px) {
+
+}
+
+</style>
+
+{% schema %}
+  {
+    "name": "Custom Text Image",
+    "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Sub-heading"
+    },
+    {
+      "type": "textarea",
+      "id": "title2",
+      "label": "Heading2",
+      "default": "Title2"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Heading",
+      "default": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1200 x 1200px .png recommended"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+    }
+    ],
+      "presets": [
+    {
+      "name": "Custom Text Image",
+      "settings": {}
+    }
+  ]
+  }
+{% endschema %}

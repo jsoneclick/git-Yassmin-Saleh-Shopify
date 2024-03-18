@@ -1,0 +1,82 @@
+<div class="section-spacing-{{ section.id }} color-body-background block {{ section.settings.color_scheme_background }}" aria-hidden="true"></div><!-- /.section-spacing -->
+
+{% style %}
+  .section-spacing-{{ section.id }} {
+    padding-top: {{ section.settings.spacing_mobile | divided_by: 10.0 }}rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-spacing-{{ section.id }} {
+      padding-top: {{ section.settings.spacing_desktop | divided_by: 10.0 }}rem;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "t:sections.spacing.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-default"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.spacing.settings.header_spacing.content"
+      },
+      {
+        "type": "range",
+        "id": "spacing_desktop",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "t:sections.spacing.settings.spacing_desktop.label",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "spacing_mobile",
+        "min": 0,
+        "max": 80,
+        "step": 1,
+        "unit": "px",
+        "label": "t:sections.spacing.settings.spacing_mobile.label",
+        "default": 20
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.spacing.name"
+      }
+    ]
+  }
+{% endschema %}

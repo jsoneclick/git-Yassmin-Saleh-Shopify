@@ -1,0 +1,508 @@
+{{- 'section-footer.css' | asset_url | stylesheet_tag -}}
+
+{%- assign social_links_array = 'Twitter,Pinterest,LinkedIn,Instagram,Facebook,YouTube,Vimeo,TikTok,Snapchat' | split: ',' -%}
+
+{%- if section.settings.logo != blank or section.settings.logo_svg_code != blank -%}
+  {%- capture footer_logo -%}
+    <div class="footer__logo">
+      <a href="{{- routes.root_url -}}">
+        {%- if section.settings.logo_svg_code != blank -%}
+          {{- section.settings.logo_svg_code -}}
+        {%- elsif section.settings.logo != blank -%}
+          {%- assign selected_logo = section.settings.logo -%}
+
+          {%- assign logo_image_size_2x = selected_logo.width | times: 2 | at_most: 5760 -%}
+
+          <img
+            srcset="{{ selected_logo | image_url: width: selected_logo.width }} 1x, {{ selected_logo | image_url: width: logo_image_size_2x }} 2x"
+            src="{{- selected_logo | image_url: width: selected_logo.width -}}"
+            loading="lazy"
+            width="{{- selected_logo.width -}}"
+            height="{{- selected_logo.height -}}"
+            alt="{{- selected_logo.alt | default: shop.name | escape -}}"
+          >
+        {%- endif -%}
+
+        <span class="visually-hidden">{{- shop.name | escape -}}</span>
+      </a>
+    </div><!-- /.footer__logo -->
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- assign footer_mobile_menu_items = blank -%}
+{%- assign is_first_details = true -%}
+
+<footer class="footer js-animation-fade-in {{ section.settings.layout }} {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+  <div class="container">
+    <div class="footer__body">
+      <div class="footer__cols">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              {%- if block.settings.menu == blank or block.settings.menu.links.size == 0 -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              {%- assign menu_title = block.settings.title | default: block.settings.menu.title -%}
+
+              <div class="footer__col footer__col--sm medium-hide small-hide">
+                <div class="footer__menu">
+                  <h5 class="footer__menu-title">
+                    {%- if block.settings.title_url != blank -%}
+                      <a href="{{- block.settings.title_url -}}">
+                        {{- menu_title | escape -}}
+                      </a>
+                    {%- else -%}
+                      {{- menu_title | escape -}}
+                    {%- endif -%}
+                  </h5>
+
+                  {%- capture footer_menu_links -%}
+                    <ul class="footer__links list-unstyled">
+                      {%- for link in block.settings.menu.links -%}
+                        <li>
+                          <a href="{{- link.url -}}">{{- link.title | escape -}}</a>
+                        </li>
+
+                        {%- for child_link in link.links -%}
+                          <li>
+                            <a href="{{- child_link.url -}}">{{- child_link.title | escape -}}</a>
+                          </li>
+
+                          {%- for grandchild_link in child_link.links -%}
+                            <li>
+                              <a href="{{- grandchild_link.url -}}">{{- grandchild_link.title | escape -}}</a>
+                            </li>
+                          {%- endfor -%}
+                        {%- endfor -%}
+                      {%- endfor -%}
+                    </ul><!-- /.footer__links -->
+                  {%- endcapture -%}
+
+                  {{ footer_menu_links }}
+                </div><!-- /.footer__menu -->
+              </div><!-- /.footer__col -->
+
+              {%- capture footer_mobile_menu_item -%}
+                <li class="footer__links-mobile-item">
+                  {%- liquid
+                    assign details_class = 'accordion__section footer__links-details'
+                    assign details_attr = blank
+
+                    if is_first_details
+                      assign details_class = details_class | append: ' is-active default-active'
+                      assign details_attr = 'open'
+                      assign is_first_details = false
+                    endif
+                  -%}
+
+                  <details
+                    class="{{- details_class -}}"
+                    id="Footer-accordion-section-{{- forloop.index -}}"
+                    {{ details_attr }}
+                  >
+                    <summary class="footer__links-mobile-link h4 heading-static js-btn" id="Accordion-button-{{- forloop.index -}}">
+                      {{- menu_title | escape -}}
+
+                      <div class="footer__links-mobile-link-icon svg-color-inherit">
+                        {%- render 'icon-plus' -%}
+
+                        {%- render 'icon-minus' -%}
+                      </div><!-- /.footer__links-mobile-link-icon -->
+                    </summary>
+
+                    <div class="footer__links-mobile-item-dropdown accordion__body" id="Accordion-dropdown-{{- forloop.index -}}">
+                      {{ footer_menu_links }}
+                    </div><!-- /.footer__nav-mobile-dropdown -->
+                  </details><!-- /.footer__links-details -->
+                </li><!-- /.footer__links-mobile-item -->
+              {%- endcapture -%}
+
+              {%- assign footer_mobile_menu_items = footer_mobile_menu_items | append: footer_mobile_menu_item -%}
+            {%- when 'socials' -%}
+              {%- if section.settings.social_links -%}
+
+                <div class="footer__col footer__col--sm medium-hide small-hide">
+                  <div class="footer__menu">
+                    <h5 class="footer__menu-title">
+                      {{- 'socials.title' | t -}}
+                    </h5>
+
+                    {%- capture social_links_list -%}
+                      <ul class="footer__links list-unstyled svg-color-inherit{% if block.settings.icons %} footer__links--cols{% endif %}">
+                        {%- for social_link in social_links_array -%}
+                          {%- liquid
+                            assign social_link_handle = social_link | handleize
+                            assign social_link_settings_handle = 'social_' | append: social_link_handle | append: '_link'
+
+                            if settings[social_link_settings_handle] == blank
+                              continue
+                            endif
+                          -%}
+
+                          <li>
+                            <a href="{{- settings[social_link_settings_handle] -}}">
+                              {%- if block.settings.icons -%}
+                                {%- render 'icon-socials', social_name: social_link_handle -%}
+                              {%- else -%}
+                                {{- social_link -}}
+                              {%- endif -%}
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul><!-- /.footer__menu-links list-unstyled -->
+                    {%- endcapture -%}
+
+                    {{ social_links_list }}
+                  </div><!-- /.footer__menu -->
+                </div><!-- /.footer__col -->
+
+              {%- if block.settings.icons -%}
+                {%- capture socials_mobile_item_icons -%}
+                  <li class="footer__links-mobile-item footer__links-mobile-item--cols">
+                    {{- social_links_list -}}
+                  </li><!-- /.footer__links-mobile-item -->
+                {%- endcapture -%}
+              {%- else -%}
+                {%- capture socials_mobile_item -%}
+                  <li class="footer__links-mobile-item">
+                    {%- liquid
+                      assign details_class = 'accordion__section footer__links-details'
+                      assign details_attr = blank
+
+                      if is_first_details
+                        assign details_class = details_class | append: ' is-active default-active'
+                        assign details_attr = 'open'
+                        assign is_first_details = false
+                      endif
+                    -%}
+
+                    <details
+                      class="{{- details_class -}}"
+                      id="Footer-socials-accordion-section-1"
+                      {{ details_attr }}
+                    >
+                      <summary class="footer__links-mobile-link h4 heading-static js-btn" id="Accordion-button-socials-1">
+                        {{- 'socials.title' | t -}}
+
+                        <div class="footer__links-mobile-link-icon svg-color-inherit">
+                          {%- render 'icon-plus' -%}
+
+                          {%- render 'icon-minus' -%}
+                        </div><!-- /.footer__links-mobile-link-icon -->
+                      </summary>
+
+                      <div class="footer__links-mobile-item-dropdown accordion__body" id="Accordion-dropdown-socials-1">
+                        {{- social_links_list -}}
+                      </div><!-- /.footer__nav-mobile-dropdown -->
+                    </details><!-- /.footer__links-details -->
+                  </li><!-- /.footer__links-item -->
+                {%- endcapture -%}
+
+                {%- assign footer_mobile_menu_items = footer_mobile_menu_items | append: socials_mobile_item -%}
+
+                {%- endif -%}
+
+              {%- endif -%}
+
+            {%- when 'utilities' -%}
+              <div class="footer__col footer__col--lg">
+                <div class="footer__content">
+                  {%- if section.settings.layout == 'footer--logo-small' -%}
+                    {{- footer_logo -}}
+                  {%- endif -%}
+
+                  {%- if block.settings.newsletter -%}
+                    {%- if block.settings.newsletter_content != blank -%}
+                      <div class="footer__content-entry">
+                        <h5>
+                          {{- block.settings.newsletter_content -}}
+                        </h5>
+                      </div><!-- /.footer__content-entry -->
+                    {%- endif -%}
+
+                    <div class="footer__newsletter">
+                      {%- render 'newsletter-form', namespace: block.id, js_class: 'js-form' -%}
+                    </div><!-- /.footer__newsletter -->
+                  {%- endif -%}
+
+                  {%- if block.settings.country_selector -%}
+                    <menu-drawer>
+                      {%- assign button_prepend_text = 'country-drawer.button_help_text' | t -%}
+
+                      {%- render 'country-drawer',
+                        button_class: ' link footer__drawer-button',
+                        button_prepend_text: button_prepend_text,
+                        append_id: 'footer'
+                      -%}
+                    </menu-drawer>
+                  {%- endif -%}
+                </div><!-- /.footer__content -->
+              </div><!-- /.footer__col -->
+          {%- endcase -%}
+        {%- endfor -%}
+      </div><!-- /.footer__cols -->
+
+      <accordion-default class="accordion footer__accordion large-up-hide">
+        <nav class="footer__nav-mobile">
+          <ul class="footer__links-mobile list-unstyled">
+            {{ footer_mobile_menu_items | append: socials_mobile_item_icons }}
+          </ul><!-- /.footer__links-mobile list-unstyled -->
+        </nav><!-- /.footer__nav-mobile -->
+      </accordion-default>
+    </div><!-- /.footer__body -->
+
+    <div class="footer__foot">
+      {%- if section.settings.layout == 'footer--logo-large' -%}
+        {{- footer_logo -}}
+      {%- endif -%}
+
+      {%- if section.settings.copyright != blank -%}
+        {%- assign current_year = 'now' | date: '%Y' -%}
+
+        <div class="footer__copyright entry {{ section.settings.copyright_alignment }}">
+          {{- section.settings.copyright | replace: '[year]', current_year -}}
+        </div><!-- /.footer__copyright -->
+      {%- endif -%}
+    </div><!-- /.footer__foot -->
+  </div><!-- /.container -->
+</footer><!-- /.footer -->
+
+{% style %}
+  .footer--logo-small .footer__logo {
+    width: {{ section.settings.logo_width_mobile | divided_by: 10.0 }}rem;
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer--logo-small .footer__logo {
+      width: {{ section.settings.logo_width | divided_by: 10.0 }}rem;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+  {
+    "name": "t:sections.footer.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header_social_links.content"
+      },
+      {
+        "type": "checkbox",
+        "id": "social_links",
+        "label": "t:sections.footer.settings.social_links.label",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "color-text-primary",
+            "label": "t:settings_schema.colors.settings.color_text_primary.label"
+          },
+          {
+            "value": "color-text-inverse",
+            "label": "t:settings_schema.colors.settings.color_text_inverse.label"
+          }
+        ],
+        "default": "color-text-inverse"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "color-background-primary",
+            "label": "t:settings_schema.colors.settings.color_background_primary.label"
+          },
+          {
+            "value": "color-background-inverse",
+            "label": "t:settings_schema.colors.settings.color_background_inverse.label"
+          }
+        ],
+        "default": "color-background-primary"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header_logo.content"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "t:sections.footer.settings.layout.label",
+        "info": "t:sections.footer.settings.layout.info",
+        "options": [
+          {
+            "value": "footer--logo-small",
+            "label": "t:sections.footer.settings.layout.options.small.label"
+          },
+          {
+            "value": "footer--logo-large",
+            "label": "t:sections.footer.settings.layout.options.large.label"
+          },
+          {
+            "value": "footer--logo-none",
+            "label": "t:sections.footer.settings.layout.options.none.label"
+          }
+        ],
+        "default": "footer--logo-large"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "t:sections.footer.settings.logo.label"
+      },
+      {
+        "type": "html",
+        "id": "logo_svg_code",
+        "label": "t:sections.footer.settings.logo_svg_code.label",
+        "info": "t:sections.footer.settings.logo_svg_code.info"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 100,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "t:sections.footer.settings.logo_width.label",
+        "info": "t:sections.footer.settings.logo_width.info",
+        "default": 160
+      },
+      {
+        "type": "range",
+        "id": "logo_width_mobile",
+        "min": 60,
+        "max": 160,
+        "step": 2,
+        "unit": "px",
+        "label": "t:sections.footer.settings.logo_width_mobile.label",
+        "info": "t:sections.footer.settings.logo_width_mobile.info",
+        "default": 130
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header_copyright.content"
+      },
+      {
+        "type": "select",
+        "id": "copyright_alignment",
+        "label": "t:sections.footer.settings.copyright_alignment.label",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "t:sections.footer.settings.copyright_alignment.options.left.label"
+          },
+          {
+            "value": "text-center",
+            "label": "t:sections.footer.settings.copyright_alignment.options.center.label"
+          },
+          {
+            "value": "text-right",
+            "label": "t:sections.footer.settings.copyright_alignment.options.right.label"
+          }
+        ],
+        "default": "text-center"
+      },
+      {
+        "type": "richtext",
+        "id": "copyright",
+        "label": "t:sections.footer.settings.copyright.label",
+        "info": "t:sections.footer.settings.copyright.info",
+        "default": "<p>©[year] Sahara, All rights reserved.</p>"
+      }
+    ],
+    "max_blocks": 5,
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "t:sections.footer.blocks.menu.name",
+        "limit": 3,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "t:sections.footer.blocks.menu.settings.title.label",
+            "info": "t:sections.footer.blocks.menu.settings.title.info"
+          },
+          {
+            "type": "url",
+            "id": "title_url",
+            "label": "t:sections.footer.blocks.menu.settings.title_url.label"
+          },
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "t:sections.footer.blocks.menu.settings.menu.label",
+            "default": "footer"
+          }
+        ]
+      },
+      {
+        "type": "socials",
+        "name": "t:sections.footer.blocks.socials.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "icons",
+            "label": "t:sections.footer.blocks.socials.settings.icons.label",
+            "info": "t:sections.footer.blocks.socials.settings.icons.info"
+          }
+        ]
+      },
+      {
+        "type": "utilities",
+        "name": "t:sections.footer.blocks.utilities.name",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "newsletter",
+            "label": "t:sections.footer.blocks.utilities.settings.newsletter.label",
+            "default": true
+          },
+          {
+            "type": "textarea",
+            "id": "newsletter_content",
+            "label": "t:sections.footer.blocks.utilities.settings.newsletter_content.label",
+            "default": "Newsletter heading goes here"
+          },
+          {
+            "type": "checkbox",
+            "id": "country_selector",
+            "label": "t:sections.footer.blocks.utilities.settings.country_selector.label",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "default": {
+      "blocks": [
+        {
+          "type": "menu"
+        },
+        {
+          "type": "menu"
+        },
+        {
+          "type": "menu"
+        },
+        {
+          "type": "socials"
+        },
+        {
+          "type": "utilities"
+        }
+      ]
+    }
+  }
+{% endschema %}

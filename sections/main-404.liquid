@@ -1,0 +1,107 @@
+{%- if section.settings.title != blank -%}
+  <link rel="stylesheet" href="{{- 'main-404.css' | asset_url -}}" media="print" onload="this.media='all'">
+  <noscript>
+    {{- 'main-404.css' | asset_url | stylesheet_tag -}}
+  </noscript>
+
+  <section class="main-404 {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+    <div class="container container--small center">
+      <h1 class="main-404__title h1">{{- section.settings.title -}}</h1><!-- /.main-404__title h2 -->
+
+      {%- if section.settings.subtext != blank -%}
+        <p class="main-404__subtext font-size-md">
+          {{- section.settings.subtext -}}
+        </p><!-- /.main-404__subtext font-size-md -->
+      {%- endif -%}
+
+      {%- if section.settings.link_text != blank and section.settings.link_url != blank -%}
+        {%- assign value = section.settings.link_text -%}
+        {%- render 'button', type: 'link', value: value, href: section.settings.link_url, class: 'button' -%}
+        {%- assign value = nil -%}
+      {%- endif -%}
+    </div><!-- /.container container--small center -->
+  </section><!-- /.main-404 -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.main-404.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.main-404.settings.title.label",
+      "default": "Page not found"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "t:sections.main-404.settings.subtext.label"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "t:sections.main-404.settings.link_text.label",
+      "default": "Continue shopping"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "t:sections.main-404.settings.link_url.label",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-secondary"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-default"
+    }
+  ]
+}
+{% endschema %}

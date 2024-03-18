@@ -1,0 +1,52 @@
+{%-
+  liquid
+  assign default_address_query = shop.address.address1 | append: ',' | append: shop.address.city | append: ' ' | append: shop.address.province
+  assign address = section.settings.address_query | default: default_address_query
+-%}
+
+{%- if section.settings.api_key != blank -%}
+  {{- 'section-map.css' | asset_url | stylesheet_tag -}}
+
+  <section class="map">
+    <div class="map__wrapper">
+      <iframe
+        width="auto"
+        height="auto"
+        style="border:0"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed/v1/place?key={{- section.settings.api_key -}}&q={{- address | url_encode -}}">
+      </iframe>
+    </div><!-- /.map__wrapper -->
+  </section><!-- /.map -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.map.name",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "api_key",
+      "label": "t:sections.map.settings.api_key.label",
+      "info": "t:sections.map.settings.api_key.info"
+    },
+    {
+      "type": "text",
+      "id": "address_query",
+      "label": "t:sections.map.settings.address.label",
+      "info": "t:sections.map.settings.address.info"
+    },
+    {
+      "type": "range",
+      "id": "zoom_level",
+      "min": 0,
+      "max": 21,
+      "step": 1,
+      "label": "t:sections.map.settings.zoom_level.label",
+      "default": 10
+    }
+  ]
+}
+{% endschema %}

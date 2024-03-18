@@ -1,0 +1,81 @@
+#recover {
+  display: none;
+}
+
+#recover:target {
+  display: block;
+}
+
+#recover:target ~ #login {
+  display: none;
+}
+
+.account {
+  color: var(--color-body-text);
+  background-color: var(--color-body-background);
+}
+
+.form-customer--login,
+.form-customer--recover,
+.form-customer--register,
+.form-customer--reset,
+.form-customer--activate {
+  padding-top: 4rem;
+}
+
+.account .form-customer.form-customer--reset {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.form-customer--recover {
+  padding-bottom: 6.4rem;
+}
+
+.form-customer__title {
+  margin: 0;
+}
+
+.form-customer__head {
+  margin-bottom: 2.4rem;
+}
+
+.form-customer .form-row + .form-row {
+  margin-top: 2.4rem;
+}
+
+.form-customer__callout {
+  padding: 4rem 0 6.4rem;
+  border-top: 0.1rem solid var(--color-border-elements);
+  margin-top: 4.2rem;
+}
+
+.form-customer__callout-title {
+  margin: 0 0 2.4rem;
+}
+
+@media screen and (min-width: 990px) {
+  .form-customer--login,
+  .form-customer--recover,
+  .form-customer--register {
+    padding-top: 6.4rem;
+  }
+
+  .account {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .account__col {
+    min-width: 50%;
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .account .form-customer {
+    max-width: calc(43.2rem + calc(var(--page-gutter) * 2));
+    margin-left: calc(12rem - var(--page-gutter));
+  }
+}

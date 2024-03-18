@@ -1,0 +1,224 @@
+.cart-drawer__overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-header);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-default),
+    visibility var(--duration-default);
+}
+
+.cart-drawer__overlay:empty {
+  display: block;
+}
+
+.cart-drawer__inner {
+  background-color: var(--color-body-background);
+  display: flex;
+  flex-direction: column;
+  width: 36rem;
+  max-width: 100%;
+  height: var(--viewport-height, 100vh);
+  padding-top: 2rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: var(--z-header);
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--duration-default),
+    transform var(--duration-default),
+    visibility var(--duration-default);
+  overflow-y: auto;
+}
+
+.cart-drawer__head {
+  padding: 2.4rem 2.4rem 3.2rem;
+}
+
+.cart-drawer__close {
+  color: var(--color-link-text);
+  background: none;
+  width: 4.8rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  position: sticky;
+  top: 0;
+  left: 2.4rem;
+  z-index: 2;
+}
+
+.cart-drawer__close svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cart-drawer__title {
+  margin: 0;
+}
+
+.cart-drawer__title,
+.cart-drawer__empty-text,
+.cart-drawer__summary-total {
+  color: var(--color-heading-text);
+}
+
+.cart-drawer__empty {
+  padding-top: 3.2rem;
+  border-top: 0.1rem solid var(--color-border-elements);
+}
+
+.cart-drawer__empty-text {
+  letter-spacing: 0;
+  margin: 0 0 2.4rem;
+}
+
+.cart-drawer__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 2.4rem 2.4rem;
+}
+
+.cart-drawer__summary-discounts {
+  font-size: var(--font-size-static-medium);
+  margin: 1.2rem 0 0;
+}
+
+.cart-drawer__summary-discounts svg {
+  color: var(--color-heading-text-default);
+}
+
+.cart-drawer__summary-discounts svg,
+.cart-drawer__summary-discounts span {
+  display: inline;
+  vertical-align: middle;
+}
+
+.cart-drawer__summary {
+  padding: 4rem 0 0;
+}
+
+.cart-drawer__summary-total {
+  letter-spacing: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 1.6rem;
+}
+
+.cart-drawer__summary-actions {
+  margin-bottom: 1.6rem;
+}
+
+.cart-drawer__summary-actions button + a {
+  margin-top: 1.6rem;
+}
+
+.cart-drawer__summary-tax {
+  color: var(--color-body-text);
+  font-size: var(--font-size-static-medium);
+  margin: 0;
+}
+
+.cart-drawer__summary-tax a {
+  color: currentColor;
+}
+
+.cart-drawer__bar {
+  margin-bottom: 2.4rem;
+}
+
+cart-drawer-items {
+  display: block;
+  position: relative;
+}
+
+.cart-drawer__spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-body-background-transparent-50);
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, visibility;
+  transition: opacity var(--duration-default), visibility var(--duration-default);
+}
+
+cart-drawer-items.is-loading .cart-drawer__spinner {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart-drawer__recommendations {
+  margin-top: 4rem;
+}
+
+.cart-drawer__recommendations .swiper {
+  margin: 0 -2.4rem;
+  padding: 0 2.4rem;
+}
+
+.is-visible .cart-drawer__overlay,
+.is-visible .cart-drawer__inner {
+  opacity: 1;
+  visibility: visible;
+}
+
+.is-visible .cart-drawer__inner {
+  transform: translateX(0);
+}
+
+.cart-drawer .cart-summary__button {
+  width: 100%;
+}
+
+@media screen and (min-width: 990px) {
+  .cart-drawer__close {
+    width: 6.4rem;
+    left: 4.8rem;
+  }
+
+  .cart-drawer__empty {
+    padding-top: 4rem;
+  }
+
+  .cart-drawer__head {
+    padding: 4rem 4.8rem 3.2rem;
+  }
+
+  .cart-drawer__inner {
+    width: 60rem;
+  }
+
+  .cart-drawer__body {
+    padding: 0 4.8rem 2.4rem;
+  }
+
+  .cart-drawer__recommendations .swiper {
+    margin: 0 -4.8rem;
+    padding: 0 4.8rem;
+  }
+
+  .cart-drawer .cart-item + .cart-item {
+    margin-top: 2.4rem;
+  }
+
+  .cart-drawer__summary {
+    padding: 3.2rem 0 0;
+  }
+}

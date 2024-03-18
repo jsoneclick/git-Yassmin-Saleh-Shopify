@@ -1,0 +1,70 @@
+cookie-banner {
+  color: var(--color-heading-text);
+  display: block;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 3.2rem;
+  background-color: var(--color-body-background);
+  z-index: var(--z-modals);
+  visibility: hidden;
+  opacity: 0;
+  will-change: visibility, opacity;
+  transition: opacity var(--duration-default), visibility var(--duration-default);
+}
+
+cookie-banner.is-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+cookie-banner p {
+  margin: 0 0 1.2rem;
+}
+
+cookie-banner p:last-child {
+  margin-bottom: 0;
+}
+
+.cookie-banner__text {
+  margin-bottom: 1.6rem;
+}
+
+.cookie-banner__actions {
+  display: flex;
+  column-gap: 2.4rem;
+}
+
+.cookie-banner__actions ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -.4rem -1.2rem;
+}
+
+.cookie-banner__actions li {
+  padding: .4rem 1.2rem;
+}
+
+.cookie-banner__link {
+  display: block;
+}
+
+@media screen and (min-width: 750px) {
+  cookie-banner {
+    max-width: 42rem;
+    bottom: 2.4rem;
+    left: 2.4rem;
+  }
+
+  .cookie-banner__text {
+    margin-bottom: 2.4rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  cookie-banner {
+    bottom: 4rem;
+    left: 4rem;
+  }
+}

@@ -1,0 +1,81 @@
+{{- 'component-search-hero.css' | asset_url | stylesheet_tag -}}
+
+<div class="search-hero {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+  <div class="container">
+    {%- render 'breadcrumbs', class: 'search-hero__breadcrumbs small-hide ' -%}
+
+    <h1 class="search-hero__title">
+      {%- if search.performed -%}
+        <span class="search-hero__title-small h4">
+          {{- 'search.results_with_count' | t: count: search.results_count -}}
+        </span><!-- /.search-hero__title-small -->
+
+        <span>
+          {{- 'search.results_term' | t: terms: search.terms -}}
+        </span>
+      {%- else -%}
+        {{- 'search.empty' | t -}}
+      {%- endif -%}
+    </h1><!-- /.search-hero__title -->
+  </div><!-- /.container -->
+</div><!-- /.search-hero -->
+
+{% schema %}
+  {
+    "name": "t:sections.main-search-banner.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ],
+        "default": "text-colors-default"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-accent-2"
+      }
+    ]
+  }
+{% endschema %}

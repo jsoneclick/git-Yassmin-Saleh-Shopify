@@ -1,0 +1,142 @@
+<div class="container"> 
+    <div class="row">
+      {% assign elements_per_row = section.settings.elements_per_row | default: 4 %}
+      {% assign col_width = 12 | divided_by: elements_per_row %}
+      {% for block in section.blocks %}
+      <div class="col-md-{{ col_width }} p-3">
+        <div class="main_div border">
+          <div class="div_img">
+            <img src="{{ block.settings.m_image | image_url }}" loading="lazy">
+          </div>
+          <div class="div_text">
+            <p class="text-center">{{ block.settings.title }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "multiImages",
+  "class": "shopify-section--tabs",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_size",
+      "label": "Content size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "fill",
+          "label": "Fill page"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "first_tab_open",
+      "label": "Open first tab on mobile"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+    {
+      "type": "range",
+      "id": "elements_per_row",
+      "label": "Elements per row",
+      "min": 1,
+      "max": 10,
+      "default": 4,
+      "step": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Images",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "m_image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "multi_images",
+      "blocks": [
+        {
+          "type": "tab"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

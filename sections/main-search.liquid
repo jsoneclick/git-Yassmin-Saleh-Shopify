@@ -1,0 +1,328 @@
+{%- if search.performed -%}
+  {{- 'section-collection.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-card-result.css' | asset_url | stylesheet_tag -}}
+
+  {% style %}
+    .collection__grid {
+      column-gap: {{ section.settings.column_gap_mobile }}rem;
+    }
+    @media screen and (min-width: 990px) {
+      .collection__grid {
+        column-gap: {{ section.settings.column_gap_desktop }}rem;
+      }
+    }
+  {% endstyle %}
+
+  <script src="{{- 'card-product.js' | asset_url -}}" defer="defer"></script>
+  <script src="{{- 'collection-load-more.js' | asset_url -}}" defer="defer"></script>
+
+  {%- if section.settings.enable_filters or section.settings.enable_sorting -%}
+    <script src="{{- 'facets.js' | asset_url -}}" defer="defer"></script>
+  {%- endif -%}
+
+  {%- liquid
+    capture collection_additional_classes
+      echo section.settings.color_scheme_text
+      echo ' '
+      echo section.settings.color_scheme_background
+    endcapture
+
+    if section.settings.enable_filters or section.settings.enable_sorting
+      echo 'component-facets.css' | asset_url | stylesheet_tag
+
+      capture facets_html
+        render 'facets', results: search, enable_filtering: section.settings.enable_filters, enable_sorting: section.settings.enable_sorting, section_id: section.id
+      endcapture
+    else
+      assign collection_additional_classes = collection_additional_classes | append: ' collection--no-utils'
+    endif
+  -%}
+
+  <div class="collection js-animation-fade-in {{ collection_additional_classes }}">
+    {{ facets_html }}
+
+    <div class="container">
+      <div class="collection__inner">
+        {%- paginate search.results by section.settings.products_per_page -%}
+          {%- if search.results_count == 0 -%}
+            <div class="collection-grid-container collection-grid-container--empty text-center" id="ProductGridContainer">
+              <h3>
+                {%- if search.terms -%}
+                  {{- 'search.empty_with_terms' | t: terms: search.terms -}}<br>
+                {%- else -%}
+                  {{- 'search.empty' | t -}}<br>
+                {%- endif -%}
+                {{- 'search.change_search_terms' | t -}}
+              </h3>
+            </div><!-- /.collection-grid-container -->
+          {%- else -%}
+            <div class="collection-grid-container" id="ProductGridContainer">
+              <div
+                class="collection__grid"
+                role="list"
+                id="product-grid"
+                data-id="{{- section.id -}}"
+                data-cols="4"
+              >
+                {%- liquid
+                  for result in search.results
+                    case result.object_type
+                      when 'product'
+                        render 'card-product', product_ref: result, section_id: section.id, card_index: forloop.index, card_product_layout: settings.card_product_layout
+                      else
+                        assign class = 'align-self-start '
+
+                        capture color_classes
+                          if result.object_type == 'article'
+                            echo section.settings.color_scheme_text_article
+                            echo ' '
+                            echo section.settings.color_scheme_background_article
+                          else
+                            echo section.settings.color_scheme_text_page
+                            echo ' '
+                            echo section.settings.color_scheme_background_page
+                          endif
+                        endcapture
+
+                        assign class = class | append: color_classes | strip
+
+                        render 'card-result', result: result, class: class
+                    endcase
+                  endfor
+                -%}
+              </div><!-- /.collection__grid -->
+
+              {%- if paginate.pages > 1 -%}
+                <collection-load-more class="collection__actions text-center no-js-hidden{% unless paginate.next %} hidden{% endunless %}" data-current-page="{{- paginate.current_page -}}">
+                  <button class="button button--outlined js-btn-load-more" data-href="{{- paginate.next.url -}}">
+                    {{- 'collection.ajax_button' | t -}}
+
+                    <div class="button__spinner">
+                      {%- render 'loading-spinner' -%}
+                    </div><!-- /.button__spinner -->
+                  </button>
+                </collection-load-more><!-- /.collection__actions -->
+
+                <div class="collection__actions no-js">
+                  {%- render 'pagination', paginate: paginate, anchor: '' -%}
+                </div><!-- /.collection__actions -->
+              {%- endif -%}
+            </div><!-- /.collection-grid-container -->
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div><!-- /.collection__inner -->
+    </div><!-- /.container -->
+  </div><!-- /.collection -->
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "t:sections.main-search.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ],
+        "default": "text-colors-default"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-default"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.main-search.settings.header_general.content"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_filters",
+        "label": "t:sections.main-search.settings.enable_filters.label",
+        "info": "t:sections.main-search.settings.enable_filters.info",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_sorting",
+        "label": "t:sections.main-search.settings.enable_sorting.label",
+        "info": "t:sections.main-search.settings.enable_sorting.info",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "t:sections.main-search.settings.header_products_grid.content"
+      },
+      {
+        "type": "range",
+        "id": "column_gap_desktop",
+        "label": "t:sections.global.settings.column_gap_desktop.label",
+        "min": 0.2,
+        "max": 3.2,
+        "step": 0.2,
+        "default": 0.2
+      },
+      {
+        "type": "range",
+        "id": "column_gap_mobile",
+        "label": "t:sections.global.settings.column_gap_mobile.label",
+        "min": 0.2,
+        "max": 3.2,
+        "step": 0.2,
+        "default": 0.2
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 8,
+        "max": 28,
+        "step": 4,
+        "label": "t:sections.main-search.settings.products_per_page.label",
+        "default": 16
+      },
+      {
+        "type": "header",
+        "content": "t:sections.main-search.settings.header_card_article.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text_article",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background_article",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-accent-2"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.main-search.settings.header_card_page.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text_page",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background_page",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-accent-1"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,45 @@
+{%- comment -%}
+  Renders a product color swatch
+
+  Accepts:
+   - colors_for_check {String}: Coma separated color names with to check from settings for match. Example: 'red, dark-red, dark-blue'
+   - class {String}: Additional css classes for js or styling
+   - input_class {String}: Additional css classes on the input element for js or styling
+   - attr {String}: Additional HTML Attributes for accessability or js
+   - id {String}: Input id
+   - show_label {Bool}: Show input label
+   - input_type: {String}: Input element type
+   - value: {String}: Input element value
+{%- endcomment -%}
+{%- liquid
+  assign option_value_handle = value | handle
+  assign class = class | default: ''
+  assign input_class = input_class | default: ''
+  assign attr = attr | default: ''
+  assign id = id | default: option_value_handle
+  assign input_type = input_type | default: 'radio'
+  assign name = name | default: 'Swatch'
+-%}
+<input
+  id="{{- id -}}"
+  type="{{- input_type -}}"
+  name="{{- name -}}"
+  class="visually-hidden {{ input_class }}"
+  {% if value != blank %}value="{{- value -}}"{% endif %}
+  data-color="{{- value -}}"
+  aria-label="{{- value -}}"
+  {{ attr }}
+/>
+
+<label
+  for="{{- id -}}"
+  class="swatch {{ settings.product_swatch_style }} swatch--{{ option_value_handle }} {{ class }}"
+  {% unless colors_for_check contains option_value_handle %}
+    style="background-color: {{ value | downcase | replace: ' ', '' }};"
+  {% endunless %}
+  title="{{- value -}}"
+>
+  <span {% unless show_label %}class="visually-hidden"{% endunless %}>
+    {{- value -}}
+  </span>
+</label>

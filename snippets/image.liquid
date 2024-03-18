@@ -1,0 +1,95 @@
+{%- comment -%}
+  Info:
+  Should be always wrapped in .media container.
+  Example:
+
+  <div class="media media--3-4">
+    {%- render 'image' -%}
+  </div>
+
+  Or:
+
+  <div class="media" style="padding-top:{%- render 'aspect-ratio', aspect_ratio: image.aspect_ratio -%}%;">
+    {%- render 'image' -%}
+  </div>
+
+  Accepts:
+  - src {String} An image initial src (should be around 500px)
+  - srcset {String} An image srcset (use srcset snippet)
+  - sizes {String} Sizes
+  - alt {String} Image alt text (should be always escaped)
+  - width {String} Image width (defaults to 'auto')
+  - height {String} Image height (defaults to 'auto')
+  - attr {String} Additional image attributes
+  - class {String} Class to be added
+
+  Usage:
+
+  {%-
+    liquid
+    assign image_src = product.featured_media | image_url: width: 500
+    capture image_srcset
+      render 'srcset', image: product.featured_media
+    endcapture
+    assign image_alt = product.featured_media.alt | escape
+
+    render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: product.featured_media.width, height: product.featured_media.height
+  -%}
+
+{%- endcomment -%}
+
+{%-
+  liquid
+  assign src = src | default: false
+  assign srcset = srcset | default: false
+  assign alt = alt | default: false
+  assign width = width | default: 'auto'
+  assign height = height | default: 'auto'
+  assign sizes = sizes | default: 'auto'
+  assign attr = attr | default: false
+  assign class = class | default: ''
+  assign hide_noscript = hide_noscript | default: false
+  assign focal_point = focal_point | default: false
+  assign loading = loading | default: 'lazy-animated'
+-%}
+
+{%- if focal_point -%}
+  {%- capture image_position -%}
+    style="object-position: {{ focal_point }};"
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- capture noscript_image -%}
+  <img
+    {% if srcset %}srcset="{{ srcset }}"{% endif %}
+    {% if sizes %}sizes="{{ sizes }}"{% endif %}
+    src="{{ src }}"
+    loading="lazy"
+    width="{{- width -}}"
+    height="{{- height -}}"
+    {% if alt %}alt="{{ alt | escape }}"{% endif %}
+    {{ image_position }}
+  >
+{%- endcapture -%}
+
+{%- if hide_noscript == false -%}
+  <noscript>
+    {{- noscript_image -}}
+  </noscript>
+{%- endif -%}
+
+{% if loading == 'lazy-animated' %}
+  <img
+    {% if srcset %}data-srcset="{{ srcset }}"{% endif %}
+    {% if sizes %}data-sizes="{{ sizes }}"{% endif %}
+    data-src="{{ src }}"
+    class="lazyload no-js-hidden {{ class }}"
+    width="{{- width -}}"
+    height="{{- height -}}"
+    {% if alt %}alt="{{ alt | escape }}"{% endif %}
+    {% if attr %}{{ attr }}{% endif %}
+    {{ image_position }}
+  >
+{% else %}
+  {{- noscript_image -}}
+{% endif %}

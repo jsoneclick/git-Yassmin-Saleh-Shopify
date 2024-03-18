@@ -1,0 +1,62 @@
+<div class="container">
+		<div class="row">
+			<div class="page-width col-md-12">
+                
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+              {% for block in section.blocks %}
+                {% if block.settings.p_heaing != blank %}
+  <li class="nav-item" role="presentation">
+    <button class="nav-link {% if forloop.index == 1 %}active {% endif %}" id="home-tab-{{ forloop.index1 }}" data-bs-toggle="tab" data-bs-target="#home-{{ forloop.index0 }}" type="button" role="tab" aria-controls="home-{{ forloop.index0 }}" aria-selected="{% if forloop.index == 1 %}true {% else %} false {% endif %}">
+      {{ block.settings.p_heaing }}
+    </button>
+  </li>						{% endif %}
+                {% endfor %}
+                
+                
+</ul>
+
+              <div class="tab-content" id="myTabContent">
+                 {% for block in section.blocks %}
+                {% if block.settings.p_text != blank %}
+  <div class="tab-pane fade {% if forloop.index == 1 %} show active {% endif %}" id="home-{{ forloop.index0 }}" role="tabpanel" aria-labelledby="home-tab-{{ forloop.index1 }}">{{ block.settings.p_text }}</div>
+                  {% elsif block.settings.p_id !=block %}
+                   <div class="tab-pane fade {% if forloop.index == 1 %} show active {% endif %}" id="home-{{ forloop.index0 }}" role="tabpanel" aria-labelledby="home-tab-{{ forloop.index1 }}">{{ block.settings.p_id.content }}</div>
+        
+                  {% endif %}
+                {% endfor %}
+</div>
+
+            </div>
+        </div>
+    </div>
+              
+
+{% schema %}
+{
+  "name": "custom tab",
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "tabs",
+      "name": "New Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "p_heaing",
+          "label": "Heading"
+        },
+        {
+        "type": "richtext",
+        "id": "p_text",
+        "label": "Page Content"
+        },
+        {
+          "type": "page",
+          "id": "p_id",
+          "label": "Page LInk"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

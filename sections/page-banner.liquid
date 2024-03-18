@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="{{- 'page-banner.css' | asset_url -}}" media="print" onload="this.media='all'">
+<noscript>
+  {{- 'page-banner.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<section class="page-banner center js-animation-fade-in {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+  <div class="container container--narrow">
+    <div class="page-banner__breadcrumbs small-hide">
+      {%- render 'breadcrumbs', alignment: 'center' -%}
+    </div><!-- /.page-banner__breadcrumbs -->
+
+    <h1 class="page-banner__title h2">
+      {{- section.settings.title | default: page.title | default: page_title -}}
+    </h1><!-- /.page-banner__title h2 -->
+
+    {%- if section.settings.content != blank -%}
+      <div class="page-banner__entry font-size-md">
+        {{- section.settings.content -}}
+      </div><!-- /.page-banner__entry -->
+    {%- endif -%}
+  </div><!-- /.container container--narrow -->
+</section><!-- /.page-banner -->
+
+{% schema %}
+{
+  "name": "t:sections.page-banner.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.page-banner.settings.title.label"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:sections.page-banner.settings.content.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-default"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-accent-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.page-banner.name"
+    }
+  ]
+}
+{% endschema %}

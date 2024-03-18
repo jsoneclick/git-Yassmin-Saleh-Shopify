@@ -1,0 +1,352 @@
+/* ------------------------------------------------------------ *\
+  Article
+\* ------------------------------------------------------------ */
+
+.article {
+  padding-top: 6.4rem;
+  background-color: var(--color-body-background);
+}
+
+.article__tags {
+  padding-bottom: 1.6rem;
+}
+
+.article__tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: -.4rem -1.2rem;
+}
+
+.article__tags-item {
+  padding: .4rem 1.2rem;
+}
+
+.article__tags a {
+  display: block;
+  text-decoration: underline solid transparent .1rem;
+  text-underline-offset: .2rem;
+  transition: text-decoration-color var(--duration-short);
+}
+
+.article__hero + .article__tags,
+.article__hero + .article__head {
+  padding-top: 2rem;
+}
+
+.article__head {
+  padding-bottom: 3.2rem;
+  text-align: center;
+}
+
+.article__title {
+  margin: 0 0 1.6rem;
+}
+
+.article__meta {
+  font-size: var(--font-size-static-small);
+  color: var(--color-heading-text);
+}
+
+.article__hero {
+  margin-bottom: 2rem;
+  max-width: calc(var(--page-width) * 0.61112);
+  padding: 0;
+}
+
+.article__media {
+  padding-bottom: 56.95%;
+}
+
+.article__media > img {
+  object-position: top center;
+}
+
+.article__content-inner {
+  padding-top: 1.2rem;
+}
+
+.article__content h1,
+.article__content h2,
+.article__content h3,
+.article__content h4,
+.article__content h5,
+.article__content h6 {
+  margin-top: 0;
+}
+
+.article__content h1 {
+  margin-bottom: 2.3rem;
+}
+
+.article__content h5 {
+  margin-bottom: 2.8rem;
+}
+
+.article__content h6 {
+  margin-bottom: 2.4rem;
+}
+
+.article__content p,
+.article__content ul,
+.article__content ol {
+  margin: 0 0 3.2rem;
+}
+
+.article__content p:last-child {
+  margin-bottom: 0;
+}
+
+.article__content table + * {
+  margin-top: 2rem;
+}
+
+.article__content table tr:first-child td {
+  font-weight: 700;
+}
+
+.article__content blockquote {
+  margin: 0 2.4rem 2rem;
+  font-style: italic;
+}
+
+.article__content img {
+  margin: 0;
+  max-width: 100%;
+  display: block;
+}
+
+.article__foot {
+  margin-top: 4rem;
+}
+
+.article__foot-inner {
+  border-top: .1rem solid var(--color-border-elements);
+  padding-top: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.article__socials-sharing + .article__back {
+  margin-top: 2.2rem;
+}
+
+.article__back-link {
+  display: flex;
+  align-items: center;
+}
+
+.article__back-link svg {
+  margin-right: 1.6rem;
+  flex-shrink: 0;
+  transition: transform var(--duration-default);
+}
+
+.article--comments-disabled .article__foot-inner {
+  border-bottom: none;
+}
+
+@media (hover: hover) {
+  .article__tags a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .article__back-link:hover svg {
+    transform: translateX(.9rem);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .article {
+    padding: 3.2rem 0 6.4rem;
+  }
+
+  .article__breadcrumbs {
+    padding: 0 var(--page-gutter) 8.5rem;
+  }
+
+  .article__breadcrumbs ul {
+    justify-content: center;
+  }
+
+  .article__tags {
+    padding-bottom: 2.4rem;
+  }
+
+  .article__title {
+    margin-bottom: 2.4rem;
+  }
+
+  .article__head {
+    padding-bottom: 6.4rem;
+  }
+
+  .article__hero + .article__tags,
+  .article__hero + .article__head {
+    padding-top: 3.4rem;
+  }
+
+  .article__media {
+    padding-bottom: 56.8%;
+  }
+
+  .article__content h1,
+  .article__content h4,
+  .article__content h5 {
+    margin-bottom: 4.4rem;
+  }
+
+  .article__content h6 {
+    margin-bottom: 5rem;
+  }
+
+  .article__content table + * {
+    margin-top: 2.9rem;
+  }
+
+  .article__content p,
+  .article__content ul,
+  .article__content ol,
+  .article__content blockquote {
+    margin-bottom: 4.8rem;
+  }
+
+  .article__content-inner {
+    padding-top: 2.8rem;
+  }
+
+  .article__foot {
+    margin-top: 4.8rem;
+  }
+
+  .article__foot-inner {
+    padding-top: 3.8rem;
+  }
+}
+
+/*  Comments  */
+
+.article__comments-wrapper {
+  padding-top: 4.8rem;
+  margin-top: 3.2rem;
+  border-top: .1rem solid var(--color-border-elements);
+}
+
+.article__comments {
+  padding-bottom: 4.8rem;
+  border-bottom: .1rem solid var(--color-border-elements);
+}
+
+.article__comments-title {
+  margin: 0 0 2.4rem;
+}
+
+.article__comments-title:last-child {
+  margin-bottom: 0;
+}
+
+.comment-form > h2 {
+  margin: 0 0 1.6rem;
+  font-size: 1.8rem;
+  line-height: var(--line-height-medium);
+  text-transform: none;
+}
+
+.article__comments-wrapper h2:focus-visible,
+.article__comments-wrapper p:focus-visible {
+  outline: none;
+}
+
+.article__comment {
+  padding: 2.4rem;
+  background-color: var(--color-body-background);
+}
+
+.article__comment + .article__comment {
+  margin-top: 2.4rem;
+}
+
+.article__comment > p {
+  color: var(--color-heading-text);
+}
+
+.article__comment-foot {
+  font-size: var(--font-size-small);
+}
+
+.article__comment p {
+  margin: 0 0 1.2rem;
+}
+
+.article__comments-pagination-alt {
+  margin-top: 3.2rem;
+}
+
+.article__comments-message {
+  margin-top: 1.6rem;
+}
+
+.article__comments-message .form__message {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  color: var(--color-heading-text);
+  margin: 0;
+}
+
+.article__comments-message .form__message svg {
+  margin-right: 1.6rem;
+  flex-shrink: 0;
+}
+
+.article__comments-wrapper .pagination-wrapper {
+  margin: 2.3rem 0;
+  padding: 0;
+}
+
+.article__comments-fields {
+  margin: 3rem 0 1.6rem;
+}
+
+.comment-form {
+  padding-top: 4.8rem;
+  color: var(--color-heading-text);
+}
+
+.comment-form .field__input {
+  display: block;
+  color: inherit;
+}
+
+.comment-form .field__label {
+  color: inherit;
+  letter-spacing: var(--letter-spacing-small);
+}
+
+.comment-form textarea {
+  padding-top: 1.45rem;
+  padding-bottom: 1.45rem;
+  height: 11.4rem;
+  resize: vertical;
+}
+
+.comment-form .button {
+  min-width: 19.2rem;
+}
+
+.article__comments-wrapper--no-comments .comment-form {
+  padding-top: 0;
+}
+
+@media screen and (min-width: 575px) {
+  .comment-form .form-row--double {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .article__comments-wrapper {
+    margin-top: 4.8rem;
+  }
+}

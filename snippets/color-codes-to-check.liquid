@@ -1,0 +1,13 @@
+{%- comment -%}
+  Returns a string of comma separated handleized color names from settings.swatches_hex_codes
+  ready to be used for a matching color color check in a product.
+{%- endcomment -%}
+{%- liquid
+  assign color_settings = settings.swatches_hex_codes | newline_to_br | strip_newlines | split: '<br />'
+  for color_setting in color_settings
+    unless forloop.first
+      echo ','
+    endunless
+    echo color_setting | split: '|' | first | handle
+  endfor
+-%}

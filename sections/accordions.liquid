@@ -1,0 +1,247 @@
+{%- if section.blocks.size > 0 -%}
+  {{- 'section-accordions.css' | asset_url | stylesheet_tag -}}
+
+  {%- capture section_additional_classes -%}
+    {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }} {{ section.settings.padding_vertical_desktop }} {{ section.settings.padding_vertical_mobile }}
+  {%- endcapture -%}
+
+  <section class="accordions color-body-background color-body-text js-animation-fade-in {{ section_additional_classes | strip }}">
+    <div class="container container--narrow">
+      {%- if section.settings.title != blank -%}
+        <h2 class="accordions__title h3">
+          {{- section.settings.title -}}
+        </h2><!-- /.accordions__title h3 -->
+      {%- endif -%}
+
+      <accordion-default class="accordion" data-hide-multiple>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            if block.settings.title == blank
+              continue
+            elsif block.settings.content == blank and block.settings.page == blank
+              continue
+            endif
+
+            if block.settings.is_open
+              assign details_class = ' is-active default-active'
+              assign details_attr = 'open'
+            else
+              assign details_class = blank
+              assign details_attr = blank
+            endif
+          -%}
+
+          <details class="accordion__section{{ details_class }}" id="Details-{{- block.id -}}" {{ details_attr }} {{- block.shopify_attributes -}}>
+            <summary class="accordion__button h5 js-btn" id="Details-Summary-{{- block.id -}}">
+              {{- block.settings.title | escape -}}
+
+              <div class="accordion__icon svg-color-inherit">
+                {%- render 'icon-chevron-down' -%}
+              </div>
+            </summary>
+
+            <div class="accordion__body" id="Details-Content-{{- block.id -}}">
+              <div class="accordion__body-inner">
+                {%- if block.settings.page != blank and block.settings.page.content != blank -%}
+                  {{- block.settings.page.content -}}
+                {%- elsif block.settings.content != blank -%}
+                  {{- block.settings.content -}}
+                {%- endif -%}
+              </div><!-- /.accordion__body-inner -->
+            </div><!-- /.accordion__body -->
+          </details><!-- /.accordion__section -->
+        {%- endfor -%}
+      </accordion-default><!-- /.accordion -->
+    </div><!-- /.container container--narrow -->
+  </section><!-- /.accordions -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.accordions.name",
+  "class": "section-accordions",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_padding_vertical.content"
+    },
+    {
+      "type": "select",
+      "id": "padding_vertical_desktop",
+      "label": "t:sections.global.settings.padding_vertical_desktop.label",
+      "options": [
+        {
+          "value": "",
+          "label": "t:sections.global.settings.padding_vertical_desktop.options.default.label"
+        },
+        {
+          "value": "pt-0-desktop",
+          "label": "t:sections.global.settings.padding_vertical_desktop.options.top_none.label"
+        },
+        {
+          "value": "pb-0-desktop",
+          "label": "t:sections.global.settings.padding_vertical_desktop.options.bottom_none.label"
+        },
+        {
+          "value": "pt-0-desktop pb-0-desktop",
+          "label": "t:sections.global.settings.padding_vertical_desktop.options.top_bottom_none.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "padding_vertical_mobile",
+      "label": "t:sections.global.settings.padding_vertical_mobile.label",
+      "options": [
+        {
+          "value": "",
+          "label": "t:sections.global.settings.padding_vertical_mobile.options.default.label"
+        },
+        {
+          "value": "pt-0-mobile",
+          "label": "t:sections.global.settings.padding_vertical_mobile.options.top_none.label"
+        },
+        {
+          "value": "pb-0-mobile",
+          "label": "t:sections.global.settings.padding_vertical_mobile.options.bottom_none.label"
+        },
+        {
+          "value": "pt-0-mobile pb-0-mobile",
+          "label": "t:sections.global.settings.padding_vertical_mobile.options.top_bottom_none.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-default"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.accordions.settings.header_text.content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.accordions.settings.title.label",
+      "default": "Frequently asked questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "t:sections.accordions.blocks.topic.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.accordions.blocks.topic.settings.header_general.content"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_open",
+          "label": "t:sections.accordions.blocks.topic.settings.is_open.label",
+          "info": "t:sections.accordions.blocks.topic.settings.is_open.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.accordions.blocks.topic.settings.header_text.content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.accordions.blocks.topic.settings.title.label",
+          "default": "Topic heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "t:sections.accordions.blocks.topic.settings.content.label",
+          "default": "<p>Descriptive topic content body text</p>"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "t:sections.accordions.blocks.topic.settings.page.label",
+          "info": "t:sections.accordions.blocks.topic.settings.page.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.accordions.name",
+      "blocks": [
+        {
+          "type": "topic",
+          "settings": {
+            "is_open": true,
+            "title": "Shipping details",
+            "content": "<p>Add additional information about shipping policy.</p>"
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "title": "Delivery details",
+            "content": "<p>Add additional information about delivery policy.</p>"
+          }
+        },
+        {
+          "type": "topic",
+          "settings": {
+            "title": "Refund details",
+            "content": "<p>Add additional information about refund policy.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

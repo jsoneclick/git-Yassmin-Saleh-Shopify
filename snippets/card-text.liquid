@@ -1,0 +1,28 @@
+{%- comment -%}
+  Accepts:
+
+  - class {String} - Card class
+  - title {String} - Card title
+  - button_text {String} - Button text
+  - button_url {String} - Button URL
+{%- endcomment -%}
+
+{%- assign button_style = button_style | default: 'button--filled' -%}
+
+{%- if title or button_text and button_url -%}
+  <div class="card-text {{ class }}">
+    <div class="card-text__content">
+      {%- if title -%}
+        <h2 class="card-text__title">
+          {{- title -}}
+        </h2><!-- /.card-text__title -->
+      {%- endif -%}
+
+      {%- if button_text and button_url -%}
+        <a href="{{- button_url -}}" class="button {{ button_style }}">
+          {{- button_text -}}
+        </a>
+      {%- endif -%}
+    </div><!-- /.card-text__content -->
+  </div><!-- /.card-text -->
+{%- endif -%}

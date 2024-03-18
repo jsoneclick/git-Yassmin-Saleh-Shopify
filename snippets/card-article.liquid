@@ -1,0 +1,71 @@
+{% comment %}
+    Renders an article card
+    Accepts:
+    - article: {Object} Article Liquid object
+    - class: {String} Class to be applied to the card
+    - show_date: {Boolean} Show date
+    - show_author: {Boolean} Show author
+    - show_excerpt: {Boolean} Show excerpt
+    Usage:
+    {%- render 'card-article', article: blog.articles[0] -%}
+{% endcomment %}
+
+<article class="card-article {{ class }}">
+  <a href="{{- article.url -}}">
+    <div class="media media--1-1 card-article__media svg-color-inherit">
+      {%-
+        liquid
+        assign image = article.image
+        if image != blank
+          assign image_src = image | image_url: width: 882
+          assign image_alt = image.alt | escape
+
+          render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: image.width, height: image.height
+        else
+          echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+        endif
+      -%}
+    </div><!-- /.media -->
+
+    <div class="card-article__content">
+      <h4 class="card-article__title">
+        {{- article.title -}}
+      </h4><!-- /.card-article__title -->
+
+      {%- if show_excerpt -%}
+        {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+          <div class="card-article__entry entry entry--list-padding-none">
+            <p>
+              {{- article.excerpt_or_content | strip_html | truncate: 180 -}}
+            </p>
+          </div><!-- /.card-article__entry -->
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if show_author or show_date -%}
+        <div class="card-article__meta">
+          <span class="article-card__author">
+            {%- if show_author -%}
+              {%- if show_date -%}
+                {{- article.author -}}
+              {%- else -%}
+                {{- 'blogs.general.posted_by' | t: author: article.author -}}
+              {%- endif -%}
+            {%- else -%}
+              {{- 'blogs.general.posted' | t -}}
+            {%- endif -%}
+          </span>
+
+          {%- if show_date -%}
+            {%- assign date_format = 'date_formats.short' | t -%}
+            {%- assign published_at = article.published_at | date: date_format -%}
+
+            <span class="article-card__date">
+              {{ 'blogs.general.posted_on' | t: date: published_at -}}
+            </span>
+          {%- endif -%}
+        </div><!-- /.card-article__meta -->
+      {%- endif -%}
+    </div><!-- /.card-article__content -->
+  </a>
+</article><!-- /.card-article -->

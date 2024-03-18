@@ -1,0 +1,470 @@
+{{- 'section-full-bleed-banner.css' | asset_url | stylesheet_tag -}}
+
+{% style %}
+  .section-{{ section.id }} {
+    --full-width-banner-height: {{ section.settings.full_width_banner_height | default: '50' | append: 'vw' }};
+     padding-bottom: calc(var(--section-spacing-unit-desktop) * {{ section.settings.spacing_bottom_desktop }});
+  }
+{% endstyle %}
+
+<section class="full-bleed-banner section-{{ section.id }} js-animation-fade-in">
+  {%- capture inner_settings_classes -%}
+    {{ section.settings.content_position_horizontal }} {{ section.settings.content_position_vertical }} {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}
+  {%- endcapture -%}
+
+  {%- liquid
+    assign has_mobile_media = false
+
+    if section.settings.image_mobile != blank or section.settings.video_mobile != blank or section.settings.video_mobile_external != blank
+      assign has_mobile_media = true
+    endif
+
+    if section.settings.image_desktop != blank or section.settings.video_desktop != blank or section.settings.video_desktop_external != blank
+      assign inner_settings_classes = inner_settings_classes | append: ' has-desktop-media has-mobile-media'
+    elsif has_mobile_media
+      assign inner_settings_classes = inner_settings_classes | append: ' has-mobile-media'
+    endif
+
+    if section.settings.content_position_vertical == 'align-start'
+      assign inner_settings_classes = inner_settings_classes | append: ' content-top'
+    endif
+  -%}
+
+  <div class="full-bleed-banner__inner {{ inner_settings_classes | strip }}">
+    {%- comment -%}
+      Desktop media
+    {%- endcomment -%}
+    {%- if section.settings.video_desktop_external != blank -%}
+      <div class="media media--overlay full-bleed-banner__media{% if has_mobile_media %} small-hide{% endif %}">
+        {% render 'external-video', video: section.settings.video_desktop_external, title: section.settings.title %}
+      </div><!-- /.media -->
+    {%- elsif section.settings.video_desktop != blank -%}
+      <div class="media media--overlay full-bleed-banner__media{% if has_mobile_media %} small-hide{% endif %}">
+        {{- section.settings.video_desktop | video_tag: image_size: '2048x', loop: true, autoplay: true, muted: true, controls: false -}}
+      </div><!-- /.media -->
+    {%- else -%}
+      <div class="media media--overlay full-bleed-banner__media{% if has_mobile_media %} small-hide{% endif %}">
+        {%-
+          liquid
+          assign image = section.settings.image_desktop
+
+          if image != blank
+            assign image_src = image | image_url: width: 2048
+            assign image_alt = image.alt | escape
+
+            render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+          else
+            echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+          endif
+        -%}
+      </div><!-- /.media -->
+    {%- endif -%}
+
+    {%- comment -%}
+      Mobile media
+    {%- endcomment -%}
+    {%- if has_mobile_media -%}
+      {%- if section.settings.video_mobile_external != blank -%}
+        <div class="media media--overlay full-bleed-banner__media small-up-hide">
+          {% render 'external-video', video: section.settings.video_mobile_external, title: section.settings.title %}
+        </div><!-- /.media -->
+      {%- elsif section.settings.video_mobile != blank -%}
+        <div class="media media--overlay full-bleed-banner__media small-up-hide">
+          {{- section.settings.video_mobile | video_tag: image_size: '1024x', loop: true, autoplay: true, muted: true, controls: false -}}
+        </div><!-- /.media -->
+      {%- elsif section.settings.image_mobile -%}
+        <div class="media media--overlay full-bleed-banner__media small-up-hide">
+          {%-
+            liquid
+            assign image_mobile = section.settings.image_mobile
+            assign image_src = image_mobile | image_url: width: 1024
+            assign image_alt = image_mobile.alt | escape
+
+            render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: image_mobile.width, height: image_mobile.height, focal_point: image_mobile.presentation.focal_point
+          -%}
+        </div><!-- /.media -->
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="full-bleed-banner__content">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'subtitle' -%}
+              {%- if block.settings.subtitle == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              {%- if block.settings.subtitle_url != blank -%}
+                <a href="{{- block.settings.subtitle_url -}}" class="full-bleed-banner__subtitle">
+                  {{- block.settings.subtitle | escape -}}
+                </a>
+              {%- else -%}
+                <p class="full-bleed-banner__subtitle">
+                  {{- block.settings.subtitle | escape -}}
+                </p><!-- /.full-bleed-banner__subtitle -->
+              {%- endif -%}
+            {%- when 'title' -%}
+              {%- if block.settings.title == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <h2 class="full-bleed-banner__title h1">
+                {{- block.settings.title | escape -}}
+              </h2><!-- /.full-bleed-banner__title -->
+            {%- when 'content' -%}
+              {%- if block.settings.content == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="full-bleed-banner__entry entry{% unless section.settings.content_position_horizontal contains 'left' %} entry--list-padding-none{% endunless %}">
+                {{- block.settings.content -}}
+              </div><!-- /.full-bleed-banner__entry -->
+            {%- when 'buttons' -%}
+              {%- if
+                block.settings.first_button_text == blank or block.settings.first_button_url == blank
+                  and
+                block.settings.second_button_text == blank or block.settings.second_button_url == blank
+              -%}
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="full-bleed-banner__buttons">
+                <ul class="list-unstyled {{ section.settings.content_position_horizontal }}">
+                  {%- if block.settings.first_button_text != blank and block.settings.first_button_url != blank -%}
+                    <li>
+                      {%- render 'button',
+                        type: 'link',
+                        style: '',
+                        class: 'full-bleed-banner__button'
+                        value: block.settings.first_button_text,
+                        href: block.settings.first_button_url
+                      -%}
+                    </li>
+                  {%- endif -%}
+
+                  {%- if block.settings.second_button_text != blank and block.settings.second_button_url != blank -%}
+                    <li>
+                      {%- render 'button',
+                        type: 'link',
+                        style: '',
+                        class: 'full-bleed-banner__button'
+                        value: block.settings.second_button_text,
+                        href: block.settings.second_button_url
+                      -%}
+                    </li>
+                  {%- endif -%}
+                </ul><!-- /.list-unstyled -->
+              </div><!-- /.full-bleed-banner__buttons -->
+          {%- endcase -%}
+        {%- endfor -%}
+      </div><!-- /.full-bleed-banner__content -->
+    {%- endif -%}
+  </div><!-- /.full-bleed-banner__inner -->
+</section><!-- /.full-bleed-banner -->
+
+{% schema %}
+  {
+    "name": "t:sections.full-bleed-banner.name",
+    "settings": [
+      {
+        "type": "range",
+        "id": "full_width_banner_height",
+        "label": "t:sections.full-bleed-banner.settings.full_width_banner_height.label",
+        "info": "t:sections.full-bleed-banner.settings.full_width_banner_height.info",
+        "min": 20,
+        "max": 100,
+        "step": 10,
+        "unit": "vw",
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "spacing_top_desktop",
+        "label": "t:sections.global.settings.spacing_top_desktop.label",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 6,
+        "unit": "x"
+      },
+      {
+        "type": "range",
+        "id": "spacing_bottom_desktop",
+        "label": "t:sections.global.settings.spacing_bottom_desktop.label",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 6,
+        "unit": "x"
+      },
+      {
+        "type": "range",
+        "id": "spacing_top_mobile",
+        "label": "t:sections.global.settings.spacing_top_mobile.label",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 6,
+        "unit": "x"
+      },
+      {
+        "type": "range",
+        "id": "spacing_bottom_mobile",
+        "label": "t:sections.global.settings.spacing_bottom_mobile.label",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 6,
+        "unit": "x"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ],
+        "default": "text-colors-inverse"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-accent-2"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_media_desktop.content"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_desktop",
+        "label": "t:sections.global.settings.image_desktop.label"
+      },
+      {
+        "type": "video",
+        "id": "video_desktop",
+        "label": "t:sections.global.settings.video_desktop.label",
+        "info": "t:sections.global.settings.video_desktop.info"
+      },
+      {
+        "type": "video_url",
+        "id": "video_desktop_external",
+        "accept": [
+          "youtube",
+          "vimeo"
+        ],
+        "info": "t:sections.global.settings.video_desktop_external.info",
+        "label": "t:sections.global.settings.video_desktop_external.label"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_media_mobile.content",
+        "info": "t:sections.global.settings.header_media_mobile.info"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "t:sections.global.settings.image_mobile.label"
+      },
+      {
+        "type": "video",
+        "id": "video_mobile",
+        "label": "t:sections.global.settings.video_mobile.label",
+        "info": "t:sections.global.settings.video_mobile.info"
+      },
+      {
+        "type": "video_url",
+        "id": "video_mobile_external",
+        "accept": [
+          "youtube",
+          "vimeo"
+        ],
+        "label": "t:sections.global.settings.video_mobile_external.label",
+        "info": "t:sections.global.settings.video_mobile_external.info"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_content_position.content",
+        "info": "t:sections.global.settings.header_content_position.info.desktop_tablet"
+      },
+      {
+        "type": "select",
+        "id": "content_position_horizontal",
+        "label": "t:sections.global.settings.content_position_horizontal.label",
+        "options": [
+          {
+            "value": "justify-start text-left",
+            "label": "t:sections.global.settings.content_position_horizontal.options.left.label"
+          },
+          {
+            "value": "justify-center text-center",
+            "label": "t:sections.global.settings.content_position_horizontal.options.center.label"
+          },
+          {
+            "value": "justify-end text-right",
+            "label": "t:sections.global.settings.content_position_horizontal.options.right.label"
+          }
+        ],
+        "default": "justify-center text-center"
+      },
+      {
+        "type": "select",
+        "id": "content_position_vertical",
+        "label": "t:sections.global.settings.content_position_vertical.label",
+        "options": [
+          {
+            "value": "align-start",
+            "label": "t:sections.global.settings.content_position_vertical.options.top.label"
+          },
+          {
+            "value": "align-center",
+            "label": "t:sections.global.settings.content_position_vertical.options.center.label"
+          },
+          {
+            "value": "align-end",
+            "label": "t:sections.global.settings.content_position_vertical.options.bottom.label"
+          }
+        ],
+        "default": "align-end"
+      }
+    ],
+    "max_blocks": 4,
+    "blocks": [
+      {
+        "type": "subtitle",
+        "limit": 1,
+        "name": "t:sections.full-bleed-banner.blocks.subtitle.name",
+        "settings": [
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "t:sections.full-bleed-banner.blocks.subtitle.settings.subtitle.label",
+            "default": "Enter a subheading for your full width image"
+          },
+          {
+            "type": "url",
+            "id": "subtitle_url",
+            "label": "t:sections.full-bleed-banner.blocks.subtitle.settings.subtitle_url.label",
+            "info": "t:sections.full-bleed-banner.blocks.subtitle.settings.subtitle_url.info"
+          }
+        ]
+      },
+      {
+        "type": "title",
+        "limit": 1,
+        "name": "t:sections.full-bleed-banner.blocks.title.name",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "t:sections.full-bleed-banner.blocks.title.settings.title.label",
+            "default": "Headline full width banner"
+          }
+        ]
+      },
+      {
+        "type": "content",
+        "limit": 1,
+        "name": "t:sections.full-bleed-banner.blocks.content.name",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "t:sections.full-bleed-banner.blocks.content.settings.content.label",
+            "default": "<p>Add descriptive text to your full width banner.</p>"
+          }
+        ]
+      },
+      {
+        "type": "buttons",
+        "limit": 1,
+        "name": "t:sections.full-bleed-banner.blocks.buttons.name",
+        "settings": [
+          {
+            "type": "header",
+            "content": "t:sections.full-bleed-banner.blocks.buttons.settings.header_first_button.content"
+          },
+          {
+            "type": "text",
+            "id": "first_button_text",
+            "label": "t:sections.full-bleed-banner.blocks.buttons.settings.first_button_text.label"
+          },
+          {
+            "type": "url",
+            "id": "first_button_url",
+            "label": "t:sections.full-bleed-banner.blocks.buttons.settings.first_button_url.label"
+          },
+          {
+            "type": "header",
+            "content": "t:sections.full-bleed-banner.blocks.buttons.settings.header_second_button.content"
+          },
+          {
+            "type": "text",
+            "id": "second_button_text",
+            "label": "t:sections.full-bleed-banner.blocks.buttons.settings.second_button_text.label"
+          },
+          {
+            "type": "url",
+            "id": "second_button_url",
+            "label": "t:sections.full-bleed-banner.blocks.buttons.settings.second_button_url.label"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.full-bleed-banner.name",
+        "blocks": [
+          {
+            "type": "subtitle"
+          },
+          {
+            "type": "title"
+          },
+          {
+            "type": "buttons"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

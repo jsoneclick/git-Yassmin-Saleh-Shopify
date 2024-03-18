@@ -1,0 +1,136 @@
+<style>
+  .container {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: "Romie";
+  }
+
+  .tabs {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    list-style-type: none;
+  }
+
+  .item {
+    flex-grow: 1;
+    height: 60px;
+    width: 100%;
+    border: 1px groove #5E433440 !important;
+    text-align: center;
+  }
+
+  .tabs_link {
+    font-size: 24px;
+    text-decoration: none !important;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .4s;
+    background: {% if block.settings.isActive == true %} red {% else %} none {% endif %};
+  }
+
+  .tabs_link:hover {
+    background: #e3dbd1;
+  }
+</style>
+<style>
+  .container {
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .tabs {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    list-style-type: none;
+  }
+
+  .item {
+    flex-grow: 1;
+    height: 60px;
+    width: 100%;
+    border: 1px groove #5E433440 !important;
+    text-align: center;
+  }
+
+  .tabs_link {
+    font-size: 24px;
+    text-decoration: none !important;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .4s;
+    background: {% if block.settings.isActive == true %} red {% else %} none {% endif %};
+  }
+
+  .tabs_link:hover {
+    background: #e3dbd1;
+  }
+  .tabs_link.active {
+    background: #e3dbd1; 
+  }
+</style>
+<div class="container">
+  <ul class="tabs" role="tablist">
+    {% for block in section.blocks %}
+      {% if block.settings.p_heaing != blank %}
+        <li class="item" role="presentation">
+          <a class="tabs_link {% if block.settings.isActive == true %}active{% endif %}" href="{{ block.settings.p_id }}">
+            {{ block.settings.p_heaing }}
+          </a>
+        </li> 
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% schema %}
+  {
+    "name": "Tab Links Section",
+    "max_blocks": 12,
+    "blocks": [
+      {
+      "type": "tabs",
+      "name": "New Tab",
+        "settings": [
+          {
+            "type": "text",
+            "id": "p_heaing",
+            "label": "Heading"
+          },
+          {
+            "type": "url",
+            "id": "p_id",
+            "label": "Button LInk"
+          },
+          {
+            "type": "checkbox",
+            "id": "isActive",
+            "label": "Make this button style active on this page",
+            "default": false
+        }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Tab Links"
+      }
+    ]
+  }
+{% endschema %}

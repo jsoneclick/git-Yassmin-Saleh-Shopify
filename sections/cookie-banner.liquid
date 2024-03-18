@@ -1,0 +1,135 @@
+{%- if section.settings.content != blank and section.settings.accept_button_text != blank -%}
+  {{- 'section-cookie-banner.css' | asset_url | stylesheet_tag -}}
+
+  <script src="{{- 'cookie-banner.js' | asset_url -}}" defer="defer"></script>
+
+  <cookie-banner
+    class="no-js-hidden js-animation-fade-in {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}"
+    {% if request.design_mode and section.settings.customizer_visible %}
+      data-open-in-design-mode="true"
+    {% endif %}
+  >
+    <div class="cookie-banner__text">
+      {{ section.settings.content }}
+    </div><!-- /.cookie-banner__text -->
+
+    <div class="cookie-banner__actions">
+      <ul class="list-unstyled">
+        {%- if section.settings.redirect_link_url != blank and section.settings.redirect_link_text != blank -%}
+          <li>
+            <a href="{{- section.settings.redirect_link_url -}}" class="link cookie-banner__link">
+              {{- section.settings.redirect_link_text -}}
+            </a>
+          </li>
+        {%- endif -%}
+
+        <li>
+          <button type="button" class="link cookie-banner__link" id="accept-cookies" name="accept-cookies" data-action>
+            {{- section.settings.accept_button_text -}}
+          </button>
+        </li>
+      </ul><!-- /.list-unstyled -->
+    </div><!-- /.cookie-banner__actions -->
+  </cookie-banner>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.cookie-banner.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.cookie-banner.settings.header_general.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "customizer_visible",
+      "label": "t:sections.cookie-banner.settings.customizer_visible.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-default"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.cookie-banner.settings.header_text.content"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:sections.cookie-banner.settings.content.label",
+      "default": "<p>This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.cookie-banner.settings.header_actions.content"
+    },
+    {
+      "type": "text",
+      "id": "redirect_link_text",
+      "label": "t:sections.cookie-banner.settings.redirect_link_text.label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "redirect_link_url",
+      "label": "t:sections.cookie-banner.settings.redirect_link_url.label"
+    },
+    {
+      "type": "text",
+      "id": "accept_button_text",
+      "label": "t:sections.cookie-banner.settings.accept.label",
+      "default": "Agree & close"
+    }
+  ]
+}
+{% endschema %}

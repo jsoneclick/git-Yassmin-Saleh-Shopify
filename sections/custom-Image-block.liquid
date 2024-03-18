@@ -1,0 +1,203 @@
+<section class="Section" id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="image-with-text-block">
+  {%- capture mobile_size -%}750x{% if section.settings.image.height >= 960 %}960{% else %}{{ section.settings.image.height }}{% endif %}{%- endcapture -%}
+
+  <div class="FlexboxIeFix">
+    <div class="ImageHero ImageHero--large" {% if section.settings.image %}style="background: url({{ section.settings.image | img_url: '1x1', format: 'pjpg' }})"{% endif %}>
+      <div class="ImageHero__ImageWrapper">
+        <div class="ImageHero__Image Image--lazyLoad Image--zoomOut {% if section.settings.show_parallax %}ImageHero__Image--parallax{% endif %}"
+             data-optimumx="1.4"
+             data-expand="-150"
+             {% if section.settings.image %}data-bgset="{{ section.settings.image | img_url: mobile_size, crop: 'center' }} 750w, {{ section.settings.image | img_url: '1000x' }} 1000w, {{ section.settings.image | img_url: '1500x' }} 1500w"{% endif %}>
+        </div>
+
+        <noscript>
+          <div class="ImageHero__ImageWrapper" style="background-image: url({{ section.settings.image | img_url: '1000x' }})"></div>
+        </noscript>
+
+        {%- unless section.settings.image != blank -%}
+          <div class="PlaceholderBackground PlaceholderBackground--Dark">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'PlaceholderBackground__Svg' }}
+          </div>
+        {%- endunless -%}
+      </div>
+
+      {%- if section.settings.title != blank or section.settings.content != blank or section.settings.button_label != blank -%}
+        <div class="ImageHero__Wrapper">
+          <div class="klaviyo-form-XPvwDv"></div>
+        <!--  <div class="ImageHero__Block ImageHero__Block--{{ section.settings.block_size }}">
+            {%- if section.settings.title != blank -%}
+              <h3 class="ImageHero__BlockHeading Heading u-h6">{{ section.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if section.settings.content != blank -%}
+              <div class="ImageHero__BlockContent Rte">
+                {{ section.settings.content }}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.button_label != blank -%}
+              <a href="{{ section.settings.button_link }}" class="ImageHero__BlockLink Link Link--underline">{{ section.settings.button_label | escape }}</a>
+            {%- endif -%} -->
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #section-{{ section.id }},
+  #section-{{ section.id }} .Heading {
+    color: {{ section.settings.text_color }};
+  }
+
+  #section-{{ section.id }} .ImageHero__Block {
+    background: {{ section.settings.background }};
+  }
+   #section-{{ section.id }} .ImageHero.ImageHero--large {
+  background: none !important;
+}
+
+  #section-{{ section.id }} .ImageHero__BlockHeading.Heading.u-h6 {
+    font-size: 45px;
+  color: #522e1f !important;
+  display: block;
+  letter-spacing: 0;
+  font-family: Quatro Slab !important;
+  line-height: 56px;
+}
+ #section-{{ section.id }} .ImageHero__Block {
+  margin: 40px auto;
+  padding: 38px 20px;
+  max-width: 250px;
+  box-shadow: 0 1px 20px #36363600;
+   width: 100% !important;
+max-width: 100% !important;
+}
+  #section-{{ section.id }} .ImageHero__BlockLink.Link.Link--underline {
+  padding: 10px 20px;
+  font-size: 20px;
+  color: #fff;
+  background-color: #bed00d;
+  margin: 20px 0;
+  display: inline-block;
+}
+ 
+  @media (max-width: 1440px) {
+}
+@media (max-width: 1366px) {
+}
+@media (max-width: 1280px) {
+}
+@media (max-width: 1199px) {
+}
+@media (max-width: 1024px) {
+}
+@media (max-width: 991px) {
+}
+@media (max-width: 980px) {
+}
+@media (max-width: 768px) {
+}
+@media (max-width: 576px) {
+ #section-{{ section.id }}  .ImageHero__BlockHeading.Heading.u-h6 {
+  font-size: 31px;
+  color: #522e1f !important;
+  display: block;
+  letter-spacing: 0;
+  font-family: Quatro Slab !important;
+  line-height: 39px;
+}
+ #section-{{ section.id }} .ImageHero__Image.Image--zoomOut.Image--lazyLoaded {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: bottom !important;
+  background-image: url(https://cdn.shopify.com/s/files/1/0589/6811/3323/files/Group_79_2x_0d37936d-1ff2-40cf-89cb-b6f3c9e1392c_1000x.png?v=1670724885) !important;
+}
+#section-{{ section.id }}  .ImageHero--large {
+  min-height: 261px;
+}
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom Image block",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1500 x 800px .jpg recommended"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#1c1b1b"
+    },
+    {
+      "type": "select",
+      "id": "block_size",
+      "label": "Block size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Your story"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_parallax",
+      "label": "Show parallax scrolling effect",
+      "info": "Only applies to desktop.",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Custom Image block",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

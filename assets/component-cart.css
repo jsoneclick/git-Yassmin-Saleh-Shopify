@@ -1,0 +1,214 @@
+.cart {
+  background-color: var(--color-body-background);
+  display: block;
+  padding: 4rem 0 6.4rem;
+}
+
+.cart .container {
+  max-width: calc(110.4rem + var(--page-gutter) * 2);
+}
+
+.cart__head {
+  margin-bottom: 4.2rem;
+}
+
+.cart__title,
+.cart__subtitle {
+  color: var(--color-heading-text);
+  margin: 0 0 2.4rem;
+}
+
+.cart__bar {
+  margin-bottom: 2.4rem;
+}
+
+.cart__summary {
+  padding-bottom: 4rem;
+  border-bottom: 0.1rem solid var(--color-border-elements);
+  margin-bottom: 4rem;
+}
+
+.cart__subtitle,
+.cart__summary-total {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.cart__summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.cart__summary-tax {
+  color: var(--color-body-text);
+  font-size: var(--font-size-static-medium);
+  margin: 1.6rem 0 0;
+}
+
+.cart__summary-discounts {
+  font-size: var(--font-size-static-medium);
+  margin: 1.2rem 0 0;
+}
+
+.cart__summary-discounts svg {
+  color: var(--color-heading-text-default);
+}
+
+.cart__summary-discounts svg,
+.cart__summary-discounts span {
+  display: inline;
+  vertical-align: middle;
+}
+
+.cart__summary-tax a {
+  color: currentColor;
+}
+
+.cart__summary-actions {
+  padding-top: 2.4rem;
+  border-top: 0.1rem solid var(--color-border-elements);
+  margin-top: 2.4rem;
+}
+
+.cart__summary-note {
+  margin: 1.6rem 0 0;
+  border-top: 0.1rem solid var(--color-border-elements);
+  padding-top: 1.6rem;
+  border-bottom: 0.1rem solid var(--color-border-elements);
+  padding-bottom: 1.6rem;
+}
+.cart__summary-note .accordion__button {
+  padding: 0;
+  background-color: transparent;
+  color: var(--color-heading-text);
+  font-size: var(--font-size-static-medium);
+  font-weight: var(--font-weight-bold);
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.cart__summary-note .accordion__body-inner {
+  margin-top: 1.6rem;
+  margin-bottom: 0;
+}
+
+
+.cart__body {
+  position: relative;
+}
+
+.cart-drawer__spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-body-background-transparent-50);
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, visibility;
+  transition: opacity var(--duration-default), visibility var(--duration-default);
+}
+
+cart-items.is-loading .cart-drawer__spinner {
+  opacity: 1;
+  visibility: visible;
+}
+
+.cart__recommendations {
+  margin-top: 4rem;
+}
+
+.cart__recommendations .swiper {
+  margin: 0 calc(var(--page-gutter) * -1);
+  padding: 0 var(--page-gutter);
+}
+
+.cart__terms {
+  margin-bottom: 1.6rem;
+}
+
+.progress-bar {
+  text-align: center;
+  display: block;
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.progress-bar__progress {
+  height: 0.6rem;
+  border: 0.1rem solid var(--color-border-elements);
+  margin-top: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-bar__progress-inner {
+  background-color: var(--color-shipping-bar-progress);
+  display: block;
+  width: 0;
+  transition: width var(--duration-default);
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  z-index: 2;
+}
+
+.progress-bar__text {
+  color: var(--color-heading-text);
+  margin: 0;
+}
+
+@media screen and (min-width: 990px) {
+  .cart {
+    padding: 6.4rem 0 9.6rem;
+  }
+
+  .cart__head {
+    margin-bottom: 6.4rem;
+  }
+
+  .cart__contents {
+    display: flex;
+    flex-flow: row-reverse wrap;
+    align-items: flex-start;
+  }
+
+  .cart__main {
+    flex: 1;
+    padding-right: 2.4rem;
+  }
+
+  .cart__summary {
+    width: 43.2rem;
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .cart__terms {
+    margin-bottom: 2.4rem;
+  }
+
+  .cart__recommendations {
+    padding-top: 4.8rem;
+    border-top: 0.1rem solid var(--color-border-elements);
+    margin-top: 4.8rem;
+  }
+
+  .cart__recommendations .swiper {
+    margin: 0;
+    padding: 0;
+  }
+}

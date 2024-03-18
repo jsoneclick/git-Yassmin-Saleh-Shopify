@@ -1,0 +1,170 @@
+{% comment %}
+    Renders a slider slide or a modal trigger
+
+    Accepts:
+    - media: {Object} Liquid media object
+    - output_type: {String} Output type. Accepts slider-slide or modal-trigger
+    - media_index: {Number} Loop index for translatables
+    - modal_id: {String} Modal id
+
+    Usage:
+    {% render 'product-media', media: product.media, output_type: 'slider-slide' %}
+    {% render 'product-media', media: product.media, output_type: 'modal-trigger' %}
+{% endcomment %}
+
+{%-
+  liquid
+  assign media_is_active = false
+  assign current_variant_media = product.selected_or_first_available_variant.featured_media.id
+  if media.id == current_variant_media
+    assign media_is_active = true
+  elsif current_variant_media == blank and media_index == 0
+    assign media_is_active = true
+  endif
+-%}
+{%- if output_type == 'slider-slide' -%}
+  <div
+    class="swiper-slide"
+    data-media-id="{{- media.id -}}"
+    data-media-type="{{- media.media_type -}}"
+    data-index="{{- media_index -}}"
+    {%- if media_is_active -%}
+      data-selected
+    {%- endif -%}
+  >
+
+    {% liquid
+      assign padding_bottom_minus_part = 100 | divided_by: media.preview_image.aspect_ratio
+      assign padding_bottom = 0
+
+      assign media_ratio_class = blank
+      if media.preview_image.aspect_ratio < 1
+        assign media_ratio_class = 'media--portrait'
+        assign padding_bottom = padding_bottom_minus_part | minus: 100 | round
+        elsif media.preview_image.aspect_ratio > 1
+        assign media_ratio_class = 'media--landscape'
+        assign padding_bottom = 100 | minus: padding_bottom_minus_part | round
+      endif
+
+      # assign preserve_aspect_ratio = true
+    %}
+
+    <div class="media {% unless preserve_aspect_ratio %} media--portrait {% else %}" style="padding-bottom: {% render 'aspect-ratio', aspect_ratio: media.preview_image.aspect_ratio %}%;{% endunless %}">
+      {%-
+        liquid
+        assign image_src = media.preview_image | image_url: width: 500
+        capture image_srcset
+          render 'srcset', image: media.preview_image
+        endcapture
+        assign sizes = 'auto'
+        assign image_alt = media.alt | escape
+        render 'image', src: image_src, srcset: image_srcset, sizes: sizes, alt: image_alt, width: media.preview_image.width, height: media.preview_image.width | divided_by: media.preview_image.aspect_ratio | ceil
+      -%}
+    </div><!-- /.media -->
+  </div><!-- /.swiper-slide -->
+
+{%- elsif output_type == 'slider-slide-thumbs' -%}
+  <div
+    class="swiper-slide swiper-slide"
+    data-media-id="{{- media.id -}}"
+    data-media-type="{{- media.media_type -}}"
+    data-index="{{- media_index -}}"
+    {%- if media_is_active -%}
+      data-selected
+    {%- endif -%}
+  >
+
+    {% liquid
+      assign padding_bottom_minus_part = 100 | divided_by: media.preview_image.aspect_ratio
+      assign padding_bottom = 0
+
+      assign media_ratio_class = blank
+      if media.preview_image.aspect_ratio < 1
+        assign media_ratio_class = 'media--portrait'
+        assign padding_bottom = padding_bottom_minus_part | minus: 100 | round
+        elsif media.preview_image.aspect_ratio > 1
+        assign media_ratio_class = 'media--landscape'
+        assign padding_bottom = 100 | minus: padding_bottom_minus_part | round
+      endif
+
+      # assign preserve_aspect_ratio = true
+    %}
+
+    <div class="media media--thumb {% unless preserve_aspect_ratio %} media--square {% else %}" style="padding-bottom: {% render 'aspect-ratio', aspect_ratio: media.preview_image.aspect_ratio %}%;{% endunless %}">
+
+      <div class="media__badge">
+        {%- if media.media_type == 'model' -%}
+          {% render 'icon-3d-model' %}
+        {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+          {% render 'icon-video' %}
+        {%- endif -%}
+      </div>
+
+      {%-
+        liquid
+        assign image_src = media.preview_image | image_url: width: 500
+        capture image_srcsetjj
+          render 'srcset', image: media.preview_image
+        endcapture
+        assign sizes = 'auto'
+        assign image_alt = media.alt | escape
+        render 'image', src: image_src, srcset: image_srcset, sizes: sizes, alt: image_alt, width: media.preview_image.width, height: media.preview_image.width | divided_by: media.preview_image.aspect_ratio | ceil
+      -%}
+    </div><!-- /.media -->
+  </div><!-- /.swiper-slide -->
+
+{%- else -%}
+  {%- if media.media_type == 'image' -%}
+    <div
+      class="product__gallery-opener {% if media_is_active %}is-active{% endif %} no-js-hidden"
+      data-modal-opener-id="{{- media.media_type | handle -}}-{{- media.id -}}"
+    >
+      <a
+        href="{{- media.preview_image | image_url: width: media.preview_image.width -}}"
+        class="product__gallery-toggle motion-reduce"
+        type="button"
+        aria-haspopup="dialog"
+        data-media-id="{{- media.id -}}"
+        data-pswp-image
+        data-pswp-src="{{- media.preview_image | image_url: width: media.preview_image.width -}}"
+        data-pswp-srcset="{{- image_srcset -}}"
+        data-pswp-width="{{- media.preview_image.width -}}"
+        data-pswp-height="{{- media.preview_image.height -}}"
+      >
+        {% render 'icon-zoom' %}
+
+        <span class="visually-hidden">
+          {{- 'products.product.media.open_media' | t: index: media_index -}}
+        </span>
+      </a>
+    </div>
+  {%- else -%}
+    {%- assign media_is_model = false -%}
+    {%- if media.media_type == 'model' -%}
+      {%- assign media_is_model = true -%}
+    {%- endif -%}
+    <modal-opener
+      class="product__gallery-opener {% if media_is_model == false %} product__gallery-opener--video{% endif %} motion-reduce {% if media_index == 0 %}is-active{% endif %} no-js-hidden"
+      data-modal="#ProductModal-{{- modal_id -}}"
+      data-modal-opener-id="{{- media.media_type | handle -}}-{{- media.id -}}"
+    >
+      <button
+        class="product__gallery-toggle motion-reduce"
+        data-media-id="{{- media.id -}}"
+        {% if media_is_model %} data-model-opener {% endif %}
+        type="button"
+        aria-haspopup="dialog"
+      >
+        {%- if media_is_model -%}
+          {% render 'icon-3d-model' %}
+        {%- else -%}
+          {% render 'icon-video' %}
+        {%- endif -%}
+
+        <span class="visually-hidden">
+          {{- 'products.product.media.open_media' | t: index: media_index -}}
+        </span>
+      </button>
+    </modal-opener>
+  {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,15 @@
+{% comment %}
+    Renders facet remove button
+    Accepts:
+    - url: {String} url to remove the facet
+    - label: {String} label to display on the button
+    - class: {String} class to add to the button
+    Usage:
+    {%- render 'facet-remove' url: value.url_to_remove, label: value.label, is_filter: true -%}
+{% endcomment %}
+
+<facet-remove>
+  <a href="{{- url -}}" class="button {{ class }}">
+    {{- label | escape -}}
+  </a>
+</facet-remove>

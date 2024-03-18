@@ -1,0 +1,418 @@
+.account-dashboard {
+  background-color: var(--color-body-background);
+}
+
+.account-dashboard dl,
+.account-dashboard dd {
+  margin: 0;
+}
+
+.account-dashboard__head {
+  padding: 4rem 0 3.2rem;
+}
+
+.account-dashboard__title {
+  margin: 0;
+}
+
+.account-dashboard__nav li {
+  padding: 2.6rem 0;
+  border-bottom: 0.1rem solid var(--color-border-elements);
+}
+
+.account-dashboard__nav li a:not(a.link) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-dashboard__nav li:first-child {
+  padding-top: 0;
+}
+
+.account-dashboard__main {
+  padding: 3.2rem 0 6.4rem;
+}
+
+.account-dashboard__main-title {
+  margin: 0 1.6rem 0 0;
+}
+
+.account-dashboard__main-subtitle {
+  font-size: var(--font-size-static-medium);
+  color: var(--color-body-text);
+  margin: 0.8rem 0 0;
+}
+
+.account-dashboard__main-head {
+  margin: 0 0 2.8rem;
+}
+
+.account-dashboard__main-head button:not(.link) {
+  width: 100%;
+  margin-top: 2.4rem;
+}
+
+.account-dashboard__col:first-child:not(:only-child) {
+  padding-bottom: 3.2rem;
+  border-bottom: 0.1rem solid var(--color-border-elements);
+  margin-bottom: 3.5rem;
+}
+
+.account-dashboard .pagination {
+  margin-top: 3.2rem;
+}
+
+.account-dashboard__breadcrumbs {
+  margin-bottom: 3.2rem;
+}
+
+.account-dashboard__breadcrumbs buttons {
+  width: auto;
+}
+
+.account-dashboard .form-row + .form-row {
+  margin-top: 2.4rem;
+}
+
+.account-dashboard__table {
+  color: var(--color-body-text);
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.account-dashboard__table th,
+.account-dashboard__table td:not(tfoot td):not(tbody tr:last-child td) {
+  border-bottom: 0.1rem solid var(--color-border-elements);
+}
+
+.account-dashboard__table tfoot tr:first-child td {
+  border-top: 0.1rem solid var(--color-border-elements);
+}
+
+.account-dashboard__table th,
+.account-dashboard__table td {
+  vertical-align: top;
+  padding: 2.4rem 0;
+}
+
+.account-dashboard__table th {
+  text-align: left;
+  color: var(--color-heading-text);
+  font-weight: 400;
+  font-size: var(--font-size-static-large);
+  padding-top: 0;
+}
+
+.account-dashboard__table td {
+  font-size: var(--font-size-static-medium);
+}
+
+.account-dashboard__table td:last-child,
+.account-dashboard__table th:last-child {
+  text-align: right;
+}
+
+.account-dashboard__table td:not(:last-child),
+.account-dashboard__table th {
+  padding-right: 1.6rem;
+}
+
+.account-dashboard__table tfoot td {
+  padding-bottom: 0;
+}
+
+.account-dashboard__table tfoot tr + tr td {
+  padding: 2rem 0 0 0;
+}
+
+.account-dashboard__table td a {
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.account-dashboard__table td a:hover {
+  text-decoration: none;
+}
+
+.account-dashboard__table-info {
+  color: var(--color-body-text);
+}
+
+.account-dashboard__table-title {
+  color: var(--color-heading-text);
+}
+
+.account-dashboard__foot {
+  padding-top: 3.2rem;
+  border-top: 0.1rem solid var(--color-border-elements);
+}
+
+.account-dashboard__foot-col + .account-dashboard__foot-col {
+  margin-top: 3.2rem;
+}
+
+@media screen and (max-width: 749px) {
+
+  .account-dashboard__table--column-mobile thead,
+  .account-dashboard__table--column-mobile td:empty {
+    display: none;
+  }
+
+  .account-dashboard__table--column-mobile,
+  .account-dashboard__table--column-mobile tbody,
+  .account-dashboard__table--column-mobile tfoot,
+  .account-dashboard__table--column-mobile td,
+  .account-dashboard__table--column-mobile tr {
+    display: block;
+  }
+
+  .account-dashboard__table--column-mobile tbody tr + tr {
+    padding-top: 3.2rem;
+    border-top: 0.1rem solid var(--color-border-elements);
+    margin-top: 3.2rem;
+  }
+
+  .account-dashboard__table--column-mobile td,
+  .account-dashboard__table--column-mobile td:not(tfoot td):not(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+
+  .account-dashboard__table--column-mobile tfoot tr:first-child td {
+    border-top: none;
+  }
+
+  .account-dashboard__table--column-mobile td {
+    padding: 0;
+  }
+
+  .account-dashboard__table--column-mobile td::before {
+    content: attr(data-heading);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .account-dashboard__table--column-mobile td + td {
+    margin-top: 2.4rem;
+  }
+
+  .account-dashboard__table--column-mobile td:not(:last-child) {
+    padding-right: 0;
+  }
+
+  .account-dashboard__table--column-mobile td:last-child {
+    text-align: left;
+  }
+
+  .account-dashboard__table--column-mobile tfoot {
+    padding: 2.4rem 0 3.2rem;
+    border-top: 0.1rem solid var(--color-border-elements);
+    margin: 2.4rem 0 0;
+  }
+
+  .account-dashboard__table--column-mobile tfoot td {
+    margin: 0;
+  }
+
+  .account-dashboard__table--column-mobile tfoot tr + tr td {
+    padding: 0;
+  }
+
+  .account-dashboard__table--column-mobile tfoot tr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .account-dashboard__table--column-mobile tfoot tr:last-child td {
+    padding-bottom: 2rem;
+  }
+}
+
+.account-card + .account-card {
+  margin-top: 3.2rem;
+}
+
+.template--orders .account-card + .account-card {
+  border-top: 0.1rem solid var(--color-border-elements);
+  padding-top: 2.9rem;
+}
+
+.account-card__title,
+.account-card__subtitle {
+  color: var(--color-heading-text);
+}
+
+.account-card__title {
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 0 0 2.4rem;
+}
+
+.account-card__subtitle {
+  font-size: var(--font-size-static-small);
+  font-family: var(--font-heading-family);
+  text-transform: var(--font-body-text-transform); /* uppercase */
+  letter-spacing: var(--font-body-letter-spacing); /* 0.2rem */
+  margin: 0 0 1rem;
+}
+
+.account-card__text {
+  color: var(--color-body-text);
+  font-size: var(--font-size-static-medium);
+  margin: 0;
+}
+
+.account-card__row + .account-card__row,
+.account-card__actions {
+  margin-top: 2.2rem;
+}
+
+.account-card__actions {
+  margin-top: 2.7rem;
+}
+
+.account-card__actions button {
+  margin-right: 2rem;
+}
+
+@media screen and (min-width: 990px) {
+  .account-dashboard {
+    padding-bottom: 4rem;
+  }
+
+  .account-dashboard__head {
+    padding: 6.4rem 0 4rem;
+  }
+
+  .account-dashboard__container {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+  }
+
+  .account-dashboard__nav {
+    width: 32rem;
+    padding: 4rem 3.2rem;
+    border: 0.1rem solid var(--color-border-elements);
+    margin-right: -1px;
+  }
+
+  .account-dashboard__main {
+    min-height: 62.9rem;
+    flex: 1;
+    border: 0.1rem solid var(--color-border-elements);
+    padding: 0;
+  }
+
+  .account-dashboard__main-inner {
+    padding: 4.8rem 6.4rem;
+  }
+
+  .account-dashboard__nav li {
+    padding: 2.4rem 0;
+  }
+
+  .account-dashboard__nav li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .account-dashboard__main-head {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 4rem;
+  }
+
+  .account-dashboard__main-subtitle {
+    margin: 0.7rem 0 0;
+  }
+
+  .account-dashboard__main-subtitle,
+  .account-dashboard__breadcrumbs {
+    width: 100%;
+  }
+
+  .account-dashboard__breadcrumbs {
+    margin-bottom: 3.7rem;
+  }
+
+  .account-dashboard__main-head button:not(.link) {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .account-dashboard__body {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .account-dashboard__col {
+    min-width: 50%;
+    flex: 1;
+  }
+
+  .account-dashboard__col:first-child:not(:only-child) {
+    padding-bottom: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .account-dashboard__col:last-child:not(:only-child) {
+    padding-left: 3.2rem;
+    border-left: 0.1rem solid var(--color-border-elements);
+  }
+
+  .account-dashboard .pagination ul {
+    justify-content: flex-start;
+  }
+
+  .account-dashboard__table-info {
+    margin-top: 0.8rem;
+  }
+
+  .account-dashboard__foot {
+    display: flex;
+    padding: 5rem 6.4rem 6.4rem;
+  }
+
+  .account-dashboard__foot-col {
+    flex: 0 1 23.1rem;
+  }
+
+  .account-dashboard__foot-col + .account-dashboard__foot-col {
+    flex: 0 1 32.3rem;
+    border-left: 0.1rem solid var(--color-border-elements);
+    padding-left: 9.2rem;
+    margin-top: 0;
+  }
+
+  .account-card .account-card__title {
+    font-size: calc(var(--font-body-scale) * 1.6rem);
+    margin-bottom: 2rem;
+  }
+
+  .account-card__subtitle {
+    margin: 0 0 1.1rem;
+  }
+
+  .account-card__row + .account-card__row {
+    margin-top: 2.2rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .account-dashboard__col:last-child:not(:only-child) {
+    padding-left: 6.4rem;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .account-dashboard__col:last-child:not(:only-child) {
+    padding-left: 9.6rem;
+  }
+}

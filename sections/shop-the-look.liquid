@@ -1,0 +1,309 @@
+{%- if section.blocks.size > 0 -%}
+  {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+  {{- 'section-shop-the-look.css' | asset_url | stylesheet_tag -}}
+  {{- 'component-card-product.css' | asset_url | stylesheet_tag -}}
+
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer"></script>
+  <script src="{{- 'card-product-slider.js' | asset_url -}}" defer="defer"></script>
+  <script src="{{- 'shop-the-look-slider.js' | asset_url -}}" defer="defer"></script>
+  <script src="{{- 'card-product.js' | asset_url -}}" defer="defer"></script>
+
+  {%- capture section_additional_classes -%}
+    {{ section.settings.padding_vertical_desktop }} {{ section.settings.padding_vertical_mobile }} {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}
+  {%- endcapture -%}
+
+  <section class="shop-the-look color-body-background js-animation-fade-in {{ section_additional_classes | strip }}">
+    <div class="container">
+      <shop-the-look-slider class="shop-the-look__inner" data-section-id="{{- section.id -}}">
+        {%- assign slider_dots_items_html = '' -%}
+
+        {%- capture item_slider_html -%}
+          <div class="shop-the-look__item shop-the-look__item--slider">
+            {%- if section.settings.title != blank -%}
+              <h3 class="shop-the-look__title h2">
+                {{- section.settings.title -}}
+              </h3><!-- /.shop-the-look__title h2 -->
+            {%- endif -%}
+
+            <div class="swiper shop-the-look__swiper js-slider{% if section.blocks.size <= 2 %} shop-the-look__swiper--2{% endif %}">
+              <div class="swiper-wrapper">
+                {%- for block in section.blocks -%}
+                  {%- if block.settings.product == blank -%}
+                    {%- continue -%}
+                  {%- endif -%}
+
+                  <div class="swiper-slide" data-index="{{- forloop.index0 -}}">
+                    {%- render 'card-product', product_ref: block.settings.product, section_id: section.id, card_index: forloop.index, card_product_layout: settings.card_product_layout -%}
+                  </div><!-- /.swiper-slide -->
+
+                  {%- capture slider_dot_item_html -%}
+                    <li style="top: {{ block.settings.dot_position_vertical }}%; left: {{ block.settings.dot_position_horizontal }}%;">
+                      <button
+                        class="pulse button-reset js-btn{% if forloop.first %} is-current{% endif %}"
+                        data-index="{{- forloop.index0 -}}"
+                        aria-label="{{- 'accessibility.jump_to_slide' | t: slide_index: forloop.index -}}"
+                        aria-current="{{- forloop.first -}}"
+                      ></button>
+                    </li>
+                  {%- endcapture -%}
+
+                  {%- assign slider_dots_items_html = slider_dots_items_html | append: slider_dot_item_html -%}
+                {%- endfor -%}
+              </div><!-- /.swiper-wrapper -->
+
+              {%- if section.blocks.size > 1 -%}
+                <div class="swiper-buttons small-hide svg-color-inherit no-js-hidden">
+                  <button class="swiper-button swiper-button--prev">
+                    {%- render 'icon-arrow-right-small' -%}
+                  </button>
+
+                  <button class="swiper-button swiper-button--next">
+                    {%- render 'icon-arrow-right-small' -%}
+                  </button>
+                </div><!-- /.swiper-buttons -->
+              {%- endif -%}
+            </div><!-- /.swiper -->
+          </div><!-- /.shop-the-look__item -->
+        {%- endcapture -%}
+
+        {%- capture item_media_html -%}
+          <div class="shop-the-look__item shop-the-look__item--media">
+            <ul class="shop-the-look__dots js-slider-dots list-unstyled js-dots-list no-js-hidden">
+              {{ slider_dots_items_html }}
+            </ul><!-- /.shop-the-look__dots -->
+
+            <div class="media shop-the-look__media svg-color-inherit">
+              {%-
+                liquid
+                assign image = section.settings.image_desktop
+                if image != blank
+                  assign image_src = image | image_url: width: 1440
+                  assign image_alt = image.alt | escape
+
+                  render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+                else
+                  echo 'image' | placeholder_svg_tag: 'placeholder-svg'
+                endif
+              -%}
+            </div><!-- /.media -->
+          </div><!-- /.shop-the-look__item -->
+        {%- endcapture -%}
+
+        {%- if section.settings.reverse_positions -%}
+          {{ item_media_html }}
+
+          {{ item_slider_html }}
+        {%- else -%}
+          {{ item_slider_html }}
+
+          {{ item_media_html }}
+        {%- endif -%}
+      </shop-the-look-slider><!-- /.shop-the-look__inner -->
+    </div><!-- /.container -->
+  </section><!-- /.shop-the-look -->
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "t:sections.shop-the-look.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_padding_vertical.content"
+      },
+      {
+        "type": "select",
+        "id": "padding_vertical_desktop",
+        "label": "t:sections.global.settings.padding_vertical_desktop.label",
+        "options": [
+          {
+            "value": "",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.default.label"
+          },
+          {
+            "value": "pt-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.top_none.label"
+          },
+          {
+            "value": "pb-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.bottom_none.label"
+          },
+          {
+            "value": "pt-0-desktop pb-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.top_bottom_none.label"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "padding_vertical_mobile",
+        "label": "t:sections.global.settings.padding_vertical_mobile.label",
+        "options": [
+          {
+            "value": "",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.default.label"
+          },
+          {
+            "value": "pt-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.top_none.label"
+          },
+          {
+            "value": "pb-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.bottom_none.label"
+          },
+          {
+            "value": "pt-0-mobile pb-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.top_bottom_none.label"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ],
+        "default": "text-colors-default"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          }
+        ],
+        "default": "background-colors-default"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.shop-the-look.settings.header_general.content"
+      },
+      {
+        "type": "checkbox",
+        "id": "reverse_positions",
+        "label": "t:sections.shop-the-look.settings.reverse_positions.label",
+        "info": "t:sections.shop-the-look.settings.reverse_positions.info"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.shop-the-look.settings.header_text.content"
+      },
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "t:sections.shop-the-look.settings.title.label",
+        "default": "Essentials"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.shop-the-look.settings.header_media_desktop.content"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_desktop",
+        "label": "t:sections.shop-the-look.settings.image_desktop.label"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "t:sections.shop-the-look.blocks.slide.name",
+        "settings": [
+          {
+            "type": "header",
+            "content": "t:sections.shop-the-look.blocks.slide.settings.header_general.content"
+          },
+          {
+            "type": "product",
+            "id": "product",
+            "label": "t:sections.shop-the-look.blocks.slide.settings.product.label"
+          },
+          {
+            "type": "header",
+            "content": "t:sections.shop-the-look.blocks.slide.settings.header_dot_position.content",
+            "info": "t:sections.shop-the-look.blocks.slide.settings.header_dot_position.info"
+          },
+          {
+            "type": "range",
+            "id": "dot_position_horizontal",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.shop-the-look.blocks.slide.settings.dot_position_horizontal.label",
+            "default": 50
+          },
+          {
+            "type": "range",
+            "id": "dot_position_vertical",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "unit": "%",
+            "label": "t:sections.shop-the-look.blocks.slide.settings.dot_position_vertical.label",
+            "default": 50
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "t:sections.shop-the-look.name",
+        "blocks": [
+          {
+            "type": "slide",
+            "settings": {
+              "dot_position_horizontal": 25,
+              "dot_position_vertical": 25
+            }
+          },
+          {
+            "type": "slide"
+          },
+          {
+            "type": "slide",
+            "settings": {
+              "dot_position_horizontal": 75,
+              "dot_position_vertical": 75
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

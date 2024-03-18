@@ -1,0 +1,137 @@
+<link rel="stylesheet" href="{{- 'form-contact.css' | asset_url -}}" media="print" onload="this.media='all'">
+<noscript>
+  {{- 'form-contact.css' | asset_url | stylesheet_tag -}}
+</noscript>
+
+<section class="form-contact {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+  <div class="container container--small">
+    {%- form 'contact', id: 'ContactForm' -%}
+      {%- if form.posted_successfully? -%}
+        <h3 class="h4" tabindex="-1" autofocus>{{- 'contact.form.success' | t -}}</h3><!-- /.h4 -->
+      {%- elsif form.errors -%}
+        <div class="color-red">
+          {{- form.errors | default_errors -}}
+        </div><!-- /.color-red -->
+      {%- endif -%}
+
+      <div class="form-row form-row--double">
+        {%-
+          liquid
+          assign label = 'contact.form.name' | t
+          assign placeholder = 'contact.form.name' | t
+          capture attr
+            echo 'autocomplete="name"'
+          endcapture
+          if form.name
+            assign value = form.name
+          elsif customer
+            assign value = customer.name
+          else
+            assign value = ''
+          endif
+          render 'text-input', id: 'ContactForm-name', label: label, name: 'contact[Name]', placeholder: placeholder, attr: attr, value: value
+        -%}
+
+        {%-
+          liquid
+          assign label = 'contact.form.email' | t | append: ' <span class="color-red" aria-hidden="true">*</span>'
+          assign placeholder = 'contact.form.email' | t
+          capture attr
+            echo 'autocomplete="email"'
+            echo 'spellcheck="false"'
+            echo 'autocapitalize="off"'
+            echo 'aria-required="true"'
+          endcapture
+          if form.email
+            assign value = form.email
+          elsif customer
+            assign value = customer.email
+          else
+            assign value = ''
+          endif
+          if form.errors contains 'email'
+            assign error = form.errors.translated_fields['email'] | capitalize | append: ' ' | append: form.errors.messages['email']
+            assign has_error = true
+          endif
+          render 'text-input', id: 'ContactForm-email', type: 'email', label: label, name: 'contact[email]', placeholder: placeholder, attr: attr, value: value, has_error: has_error, message: error
+        -%}
+      </div><!-- /.form-row form-row--double -->
+
+      <div class="form-row">
+        {%-
+          liquid
+          assign label = 'contact.form.message' | t
+          assign placeholder = 'contact.form.message' | t
+          assign name = 'contact.form.message' | t
+          render 'textarea-input', id: 'ContactForm-body', label: label, name: name, placeholder: placeholder, body: form.body
+        -%}
+      </div><!-- /.form-row -->
+
+      <div class="form-row form-row--actions">
+        {%- assign value = 'contact.form.submit' | t -%}
+        {%- render 'button', type: 'submit', style: 'solid', value: value, class: 'button' -%}
+        {%- assign value = nil -%}
+      </div><!-- /.form-row -->
+    {%- endform -%}
+  </div><!-- /.container container--small -->
+</section><!-- /.form-contact -->
+
+{% schema %}
+{
+  "name": "t:sections.form-contact.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-default"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-default"
+    }
+  ]
+}
+{% endschema %}

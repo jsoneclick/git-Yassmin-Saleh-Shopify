@@ -1,0 +1,236 @@
+{%- if section.blocks.size > 0 -%}
+  {{- 'section-marquees.css' | asset_url | stylesheet_tag -}}
+
+  {%- capture section_additional_classes -%}
+    {{ section.settings.color_scheme_text }}
+		{{ section.settings.color_scheme_background }}
+		{{ section.settings.padding_vertical_desktop }}
+		{{ section.settings.padding_vertical_mobile }}
+  {%- endcapture -%}
+
+	<section class="marquees color-body-background color-body-text js-animation-fade-in {% if section.settings.enable_animation %}  enable-animation {% endif %} {{ section_additional_classes | strip }}">
+		<div class="marquee marquee--hover-pause">
+
+			{% capture marquee_items %}
+				{%- for block in section.blocks -%}
+					{%- if block.settings.title -%}
+						<li class="marquee__item">
+
+							{%- if block.settings.icon_svg_code -%}
+								{{- block.settings.icon_svg_code -}}
+							{%- endif -%}
+
+							{%- if block.settings.link -%}
+								<a href="{{ block.settings.link }}" title="{{ block.settings.title }}" class="marquee__link">
+									<h3 class="marquee__title">{{ block.settings.title }}</h3>
+								</a>
+							{%- else -%}
+								<h3 class="marquee__title">{{ block.settings.title }}</h3>
+							{%- endif -%}
+
+						</li>
+					{%- endif -%}
+				{%- endfor -%}
+			{% endcapture %}
+
+			{%- assign lower_limit = section.blocks.size -%}
+			{%- assign upper_limit = 6 -%}
+
+
+			<ul class="marquee__content">
+				{% for i in (lower_limit..upper_limit) -%}
+					{{ marquee_items }}
+				{%- endfor %}
+			</ul>
+			<ul aria-hidden="true" class="marquee__content">
+				{% for i in (lower_limit..upper_limit) -%}
+					{{ marquee_items }}
+				{%- endfor %}
+			</ul>
+		</div>
+	</section>
+
+{%- endif -%}
+
+{% schema %}
+	{
+		"name": "t:sections.marquees.name",
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "enable_animation",
+				"label": "t:sections.marquees.settings.enable_animation.label",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "t:sections.marquees.settings.header_color_scheme.content"
+			},
+			{
+				"type": "select",
+				"id": "color_scheme_text",
+				"label": "t:sections.global.settings.color_scheme_text.label",
+				"options": [
+					{
+						"value": "text-colors-default",
+						"label": "t:sections.global.settings.color_scheme_text.options.default.label"
+					},
+					{
+						"value": "text-colors-secondary",
+						"label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+					},
+					{
+						"value": "text-colors-inverse",
+						"label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+					}
+				],
+				"default": "text-colors-default"
+			},
+			{
+				"type": "select",
+				"id": "color_scheme_background",
+				"label": "t:sections.global.settings.color_scheme_background.label",
+				"options": [
+					{
+						"value": "background-colors-default",
+						"label": "t:sections.global.settings.color_scheme_background.options.default.label"
+					},
+					{
+						"value": "background-colors-secondary",
+						"label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+					},
+					{
+						"value": "background-colors-accent-1",
+						"label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+					},
+					{
+						"value": "background-colors-accent-2",
+						"label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+					},
+					{
+						"value": "background-colors-inverse",
+						"label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+					}
+				],
+				"default": "background-colors-accent-2"
+			},
+			{
+				"type": "header",
+				"content": "t:sections.marquees.settings.header_padding_vertical.content"
+			},
+      {
+        "type": "select",
+        "id": "padding_vertical_desktop",
+        "label": "t:sections.global.settings.padding_vertical_desktop.label",
+        "options": [
+          {
+            "value": "",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.default.label"
+          },
+          {
+            "value": "pt-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.top_none.label"
+          },
+          {
+            "value": "pb-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.bottom_none.label"
+          },
+          {
+            "value": "pt-0-desktop pb-0-desktop",
+            "label": "t:sections.global.settings.padding_vertical_desktop.options.top_bottom_none.label"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "padding_vertical_mobile",
+        "label": "t:sections.global.settings.padding_vertical_mobile.label",
+        "options": [
+          {
+            "value": "",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.default.label"
+          },
+          {
+            "value": "pt-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.top_none.label"
+          },
+          {
+            "value": "pb-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.bottom_none.label"
+          },
+          {
+            "value": "pt-0-mobile pb-0-mobile",
+            "label": "t:sections.global.settings.padding_vertical_mobile.options.top_bottom_none.label"
+          }
+        ]
+      }
+		],
+		"blocks": [
+			{
+				"type": "item",
+				"name": "t:sections.marquees.blocks.item.name",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "icon",
+						"label": "t:sections.marquees.blocks.item.settings.icon.label"
+					},
+					{
+						"type": "textarea",
+						"id": "icon_svg_code",
+						"label": "t:sections.marquees.blocks.item.settings.icon_svg_code.label"
+					},
+					{
+						"type": "text",
+						"id": "title",
+						"label": "t:sections.marquees.blocks.item.settings.title.label"
+					},
+					{
+						"type": "text",
+						"id": "link",
+						"label": "t:sections.marquees.blocks.item.settings.link.label"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "t:sections.marquees.name",
+				"blocks": [
+					{
+						"type": "item",
+						"settings": {
+							"icon_svg_code": "",
+							"title": "Store Specification 1",
+							"link": ""
+						}
+					},
+					{
+						"type": "item",
+						"settings": {
+							"icon_svg_code": "",
+							"title": "Store Specification 2",
+							"link": ""
+						}
+					},
+					{
+						"type": "item",
+						"settings": {
+							"icon_svg_code": "",
+							"title": "Store Specification 3",
+							"link": ""
+						}
+					},
+					{
+						"type": "item",
+						"settings": {
+							"icon_svg_code": "",
+							"title": "Store Specification 4",
+							"link": ""
+						}
+					}
+				]
+			}
+		]
+	}
+{% endschema %}

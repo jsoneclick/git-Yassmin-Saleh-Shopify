@@ -1,0 +1,196 @@
+<style>
+  a:hover .main_div::before{
+    
+  }
+  .main_div {
+    position: relative;
+  }
+  .main_div::before {
+    content: '';
+    height: 0%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+     background: #1c242e; /* #505466 */
+    z-index:;
+    mix-blend-mode: difference;
+    transition: 1s;
+  }
+  a:hover .main_div::before{
+    height: 100%;
+  }
+  
+</style>
+<div class="container"> 
+    <div class="row">
+      {% assign elements_per_row = section.settings.elements_per_row | default: 4 %}
+      {% assign col_width = 12 | divided_by: elements_per_row %}
+      {% for block in section.blocks %}
+      <div class="col-md-{{ col_width }} p-3">
+        <a href="{{ section.settings.link_url }}">
+        <div class="main_div"> 
+          <div class="div_video">
+            <video width="100%" height="auto" muted autoplay loop playsinline class="video-slider" loading="lazy">
+                <source src="{{ block.settings.video_url | video_tag }}
+            </video>
+          </div>
+          <div class="div_text">
+              <h2 class="text-center">
+                {{ block.settings.title }}
+              </h2>
+              <p style="text-align:center; font-size: 2rem; margin-top: 10px; padding:8px;">{{ block.settings.bodyText }}</p>
+          </div>
+        </div>
+               </a>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var videos = document.querySelectorAll('.video-slider');
+
+  videos.forEach(function(video) {
+    video.addEventListener('ended', function() {
+      // Reset video to the beginning and play again
+      this.currentTime = 0;
+      this.play();
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "multi-video-row",
+  "class": "shopify-section--tabs",
+  "max_blocks": 2000,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_size",
+      "label": "Content size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "fill",
+          "label": "Fill page"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "first_tab_open",
+      "label": "Open first tab on mobile"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "color_background",
+      "id": "heading_gradient",
+      "label": "Heading gradient"
+    },
+    {
+      "type": "range",
+      "id": "elements_per_row",
+      "label": "Elements per row",
+      "min": 1,
+      "max": 10,
+      "default": 4,
+      "step": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Videos",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video_url",
+          "label": "Video"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Add Title"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Add Link"
+        },
+        {
+          "type": "text",
+          "id": "bodyText",
+          "label": "Add BodyText"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "multi-video-row",
+      "blocks": [
+        {
+          "type": "tab"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

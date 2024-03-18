@@ -1,0 +1,49 @@
+{%- comment -%}
+  Renders a collection card
+
+  Accepts:
+  - collection_ref: {Object} - Collection object
+  - class: {String} - Class to be applied to the card
+  - class_without_image: {String} Class to be applied when the card has no image. Replaces original class
+{%- endcomment -%}
+{%- liquid
+  assign class = class | default: blank
+  assign title = title | default: collection_ref.title
+  assign image = image | default: collection_ref.featured_image
+
+  if collection_ref.metafields.card.image != blank
+    assign image = collection_ref.metafields.card.image
+  endif
+
+  if image != blank
+    assign image_src = image | image_url: width: 882
+    assign image_alt = image.alt | escape
+    assign media_class = ' media--overlay'
+
+    capture card_image
+      render 'image', src: image_src, sizes: 'auto', alt: image_alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+    endcapture
+  elsif class_without_image
+    assign class = class_without_image | append: ' card-collection--no-image'
+  else
+    assign class = class | append: ' card-collection--no-image'
+  endif
+-%}
+
+<div class="card-collection {{ class }}">
+  <a href="{{- collection_ref.url -}}">
+    <div class="media{{ media_class }} card-collection__media">
+      {{ card_image }}
+    </div><!-- /.media -->
+
+    <div class="card-collection__content">
+      <h3 class="card-collection__title">
+        {{- title -}}
+      </h3><!-- /.card-collection__title -->
+
+      <span class="link card-collection__link">
+        {{- 'featured-collections.card.link' | t -}}
+      </span>
+    </div><!-- /.card-collection__content -->
+  </a>
+</div><!-- /.card-collection -->

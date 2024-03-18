@@ -1,0 +1,248 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+{%- if product.has_only_default_variant == false -%}
+  <div
+    class="product__selector no-js-hidden"
+    id="ProductSelector-{{- section.id -}}"
+    {{ block.shopify_attributes }}>
+    <product-selector
+      class="product-selector {{ block.settings.variant_picker_layout }}"
+      data-url="{%- if collection -%}{{- collection.url -}}{%- endif -%}{{- product.url -}}"
+      data-section-id="{{- section.id -}}"
+      data-installments-form-id="#{{- product_form_installments_id -}}"
+      {% if product.requires_selling_plan %}data-product-requires-selling-plan{% endif %}>
+      <input
+        type="hidden"
+        name="id"
+        value="{{- current_variant.id -}}"
+        form="{{ product_form_id }}">
+
+      {%- liquid
+        capture color_codes
+          render 'color-codes-to-check'
+        endcapture
+        assign variants_available_arr = product.variants | map: 'available'
+        assign variants_option1_arr = product.variants | map: 'option1'
+        assign product_bar_variant_selects = ''
+      -%}
+
+      {%- for option in product.options_with_values -%}
+        <fieldset class="product-selector__buttons {% if product.has_only_default_variant %} hidden {% endif %}" data-input-wrapper>
+          {%- if block.settings.variant_picker_layout != 'product-selector--stacked' -%}
+            <legend class="product-selector__label">{{- option.name -}}</legend>
+          {%- endif -%}
+          {%- liquid
+            assign option_is_color = false
+            if option.name == settings.swatches_option
+              assign option_is_color = true
+            endif
+          -%}
+          {%- assign select_options_html = '' -%}
+          {%- capture options_html -%}
+            {%- for value in option.values -%}
+              {%- liquid
+                assign option_disabled = true
+                assign id = 'Bar-option-' | append: section.id | append: '-' | append: option.name | append: '-' | append: forloop.index0
+                assign name = 'options[' | append: option.name | append: ']'
+
+                for option1_name in variants_option1_arr
+                  unless option.position != 1
+                    if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                      assign option_disabled = false
+                    endif
+                  endunless
+                endfor
+              -%}
+              {%- capture select_option_html -%}
+                <option
+                  value="{{- value | escape -}}"
+                  data-id="{{- id -}}"
+                  {% if option.selected_value == value %}selected="selected"{% endif %}{% if option_disabled %}disabled{% endif %}>
+                  {{- value -}}
+                </option>
+              {%- endcapture -%}
+              {% capture select_options_html %}
+                {{- select_options_html -}}
+                {{- select_option_html -}}
+              {% endcapture %}
+              {%- if option_is_color or block.settings.variant_picker_type == 'buttons' and product.gift_card? == false -%}
+                <li>
+                  {%- liquid
+                    assign attr = ''
+                    assign show_label = false
+                    assign swatch_class = 'product__swatch '
+                    if option_is_color
+                      assign swatch_class = swatch_class | append: 'product__swatch--color'
+                    else
+                      assign swatch_class = swatch_class | append: 'product__swatch--button'
+                      assign show_label = true
+                    endif
+                    if option.selected_value == value
+                      assign swatch_class = swatch_class | append: ' is-active'
+                      assign attr = 'checked'
+                    endif
+                    if option_disabled
+                      assign attr = attr | append: ' disabled'
+                    endif
+                    render 'product-swatch', value: value, colors_for_check: color_codes, class: swatch_class, id: id, name: name, attr: attr, show_label: show_label
+                  -%}
+                </li>
+              {%- else -%}
+                {{- select_option_html -}}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {%- capture variant_select_html -%}
+            {%- render 'select-input', id: 'Product-Variants-Select-1', name: name, options: select_options_html, class: 'product-selector__dropdown' -%}
+          {%- endcapture -%}
+          {%- capture product_bar_variant_selects -%}
+            {{- product_bar_variant_selects -}}
+            {{- variant_select_html -}}
+          {%- endcapture -%}
+
+          {% comment %} X:{{ select_options_html }}<br/>
+          Y:{{ options_html }}<br/> {% endcomment %}
+
+          {%- if block.settings.variant_picker_layout == 'product-selector--stacked' -%}
+            {%- render 'select-input', id: 'Product-Variants-Select-2', name: name, options: select_options_html, class: 'product-selector__dropdown' -%}
+          {%- else -%}
+            {%- if option_is_color or block.settings.variant_picker_type == 'buttons' and product.gift_card? == false -%}
+              <div class="product__swatches swatches">
+                <ul class="list-unstyled">
+                  {{- options_html -}}
+                </ul>
+              </div>
+              <!-- /.product__swatches -->
+            {%- else -%}
+              {%- render 'select-input', id: 'Product-Variants-Select-2', name: name, options: select_options_html, class: 'product-selector__dropdown' -%}
+            {%- endif -%}
+          {%- endif -%}
+
+
+          {%- if option.name == settings.sizes_option and block.settings.size_guide_page != blank -%}
+            <menu-drawer class="product__size-guide">
+              <details id="Size-Guide-drawer" class="drawer__container">
+                <summary class="drawer__button drawer__button--text svg-color-inherit">
+                  <span class="drawer__button-text underlined-link caption caption--small">
+                    {{- 'products.product.size_guide' | t -}}
+                  </span>
+                </summary>
+
+                <div
+                  class="drawer__content js-drawer"
+                  id="Size-Guide-menu-drawer"
+                  tabindex="-1">
+                  <button
+                    class="drawer__button-close button-reset no-js-hidden js-btn-close-drawer svg-color-inherit"
+                    aria-label="{{- 'accessibility.close' | t -}}"
+                    aria-controls="Size-Guide-menu-drawer"
+                    aria-expanded="false">
+                    {%- render 'icon-arrow-right' -%}
+                  </button>
+                  <!-- /.drawer__button -->
+
+                  <div class="drawer__row drawer__row--gutter-sm">
+                    <h2 class="drawer__title heading-static">
+                      {{- block.settings.size_guide_page.title -}}
+                    </h2>
+
+                    <div class="rte">
+                      {{- block.settings.size_guide_page.content -}}
+                    </div>
+                    <!-- /.rte -->
+                  </div>
+                  <!-- /.drawer__row -->
+                </div>
+                <!-- /.drawer__content -->
+              </details>
+            </menu-drawer>
+          {%- endif -%}
+
+          {%-
+            liquid
+            assign id = nil
+            assign name = nil
+          -%}
+        </fieldset>
+        <!-- /.product-selector__buttons -->
+      {%- endfor -%}
+
+      <script type="application/json">
+        {{- product.variants | json -}}
+      </script>
+    </product-selector>
+    <!-- /.product-selector -->
+  </div>
+  <!-- /.product__selector -->
+{%- endif -%}
+
+{% if section.settings.enable_actions_bar %}
+  <script src="{{- 'product-bar.js' | asset_url -}}" defer></script>
+  {% liquid
+    assign requires_selling_plan = false
+    assign has_selected_plan = false
+    if product.requires_selling_plan and current_variant.selected_selling_plan_allocation == nil
+      assign requires_selling_plan = true
+    elsif product.requires_selling_plan
+      assign has_selected_plan = true
+    endif
+  %}
+  <product-bar class="product-bar is-hidden {% if product.options.size == 3 %} product-bar--large {% elsif product.has_only_default_variant %} product-bar--no-options {% endif %} no-js-hidden" id="ProductBar-{{- section.id -}}">
+    {%-
+      liquid
+      if requires_selling_plan
+        assign button_class = 'product-bar__button'
+        if has_selected_plan
+          assign button_class = button_class | append: ' is-hidden'
+        endif
+        assign button_value = 'products.product.selling_plan_groups.choose_purchase_options' | t
+        render 'button', type: 'button', style: 'solid', value: button_value, class: button_class, attr: 'data-purchase-options-button'
+      endif
+    -%}
+    <div class="product-bar__options {% if requires_selling_plan and has_selected_plan == false %} is-hidden {% endif %}">
+      {{- product_bar_variant_selects -}}
+
+      {%- assign button_attr = 'form="' | append: product_form_id | append: '"' -%}
+      {%- assign value = 'products.product.sold_out' | t -%}
+      {%- render 'button', type: 'submit', name: 'add', style: 'solid', value: value, class: 'button product-bar__submit', disabled: true, attr: button_attr %}
+    </div><!-- /.product-bar__inner -->
+
+  </product-bar>
+{% endif %}
+
+<noscript>
+  {%- unless product.has_only_default_variant -%}
+    <div class="product-selector">
+      {%- assign name = 'id' -%}
+      {%- assign id = 'Product-Variants-Select-3' -%}
+      {%- capture variant_options -%}
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+            {% if variant.available == false %}disabled="disabled"{% endif %}
+            value="{{- variant.id -}}"
+          >
+            {{- variant.title -}}
+            {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}
+            -
+            {% if settings.show_currency_codes %}
+              {{ variant.price | money_with_currency | strip_html }}
+            {% else %}
+              {{ variant.price | money | strip_html }}
+            {% endif %}
+          </option>
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {%- render 'select-input', id: id, name: name, options: variant_options, class: 'product-selector__dropdown' -%}
+    </div><!-- /.product-selector -->
+  {%- else -%}
+    <input
+      type="hidden"
+      name="id"
+      form="{{- product_form_id -}}"
+      value="{{- product.selected_or_first_available_variant.id | default: product.variants.first.id -}}"
+    >
+  {%- endunless -%}
+</noscript>

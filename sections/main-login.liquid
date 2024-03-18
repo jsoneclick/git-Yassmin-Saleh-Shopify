@@ -1,0 +1,246 @@
+{{- 'customer.css' | asset_url | stylesheet_tag -}}
+
+<script src="{{- 'form-validate.js' | asset_url -}}" defer></script>
+
+<section class="account {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+  {%- if section.settings.image_aside != blank -%}
+    <div class="account__col small-hide medium-hide">
+      <div class="account__image media" style="padding-top:{%- render 'aspect-ratio', aspect_ratio: section.settings.image_aside.aspect_ratio -%}%;">
+        {%-
+          liquid
+          assign image = section.settings.image_aside
+          assign image_src = image | image_url: width: 500
+          capture image_srcset
+            render 'srcset', image: image
+          endcapture
+          assign image_alt = image.alt | escape
+
+          render 'image', src: image_src, srcset: image_srcset, sizes: 'auto', alt: image_alt, width: image.width, height: image.height, focal_point: image.presentation.focal_point
+        -%}
+      </div><!-- /.account__image -->
+    </div><!-- /.account__col -->
+  {%- endif -%}
+
+  <div class="account__col">
+    <div class="form-customer form-customer--recover" id="recover">
+      <div class="container container--small">
+        <div class="form-customer__head">
+          <h1 class="h2 form-customer__title">
+            {{- 'customer.recover_password.title' | t -}}
+          </h1><!-- /.h2 form-customer__title -->
+        </div><!-- /.form-customer__head center -->
+
+        <div class="form-customer__body">
+          <form-validate>
+            {%- form 'recover_customer_password' -%}
+              {%- assign recover_success = form.posted_successfully? -%}
+
+              <div class="form-row">
+                {%-
+                  liquid
+                  assign label = 'customer.recover_password.email' | t
+                  assign placeholder = 'customer.recover_password.email_placeholder' | t
+                  assign error = false
+                  assign has_error = false
+                  capture attr
+                    echo 'autocorrect="off"'
+                    echo 'autocapitalize="off"'
+                    echo 'autocomplete="email"'
+                    if form.errors
+                      assign error = form.errors.messages['form']
+                      assign has_error = true
+                      echo 'autofocus'
+                    endif
+                  endcapture
+                  render 'text-input', id: 'RecoverEmail', label: label, type: 'email', name: 'email', placeholder: placeholder, attr: attr, message: error, has_error: has_error, required: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                  assign error = nil
+                  assign has_error = nil
+                -%}
+              </div><!-- /.form-row -->
+
+              <div class="form-row">
+                <div>
+                  {%- assign value = 'customer.recover_password.submit' | t -%}
+                  {%- render 'button', type: 'submit', value: value, style: 'solid', class: 'button' -%}
+                  {%- assign value = nil -%}
+                </div>
+              </div><!-- /.form-row -->
+
+              <div class="form-row">
+                <div>
+                  <a href="#login" class="link">{{- 'customer.recover_password.cancel' | t -}}</a>
+                </div>
+              </div><!-- /.form-row -->
+            {%- endform -%}
+          </form-validate>
+        </div><!-- /.form-customer__body -->
+      </div><!-- /.container container--small -->
+    </div><!-- /#recover.form-customer form-customer--recover -->
+
+    <div class="form-customer form-customer--login" id="login">
+      <div class="container container--small">
+        <div class="form-customer__head">
+          <h1 class="h2 form-customer__title">
+            {{- 'customer.login.title' | t -}}
+          </h1><!-- /.h2 form-customer__title -->
+
+          {%- if recover_success == true -%}
+            <p class="form-customer__subtitle color-subdued" tabindex="-1" autofocus>
+              {{- 'customer.recover_password.success' | t -}}
+            </p><!-- /.form-customer__subtitle color-subdued -->
+          {%- endif -%}
+        </div><!-- /.form-customer__head center -->
+
+        <div class="form-customer__body">
+          <form-validate>
+            {%- form 'customer_login' -%}
+              {%- if form.errors -%}
+                <div class="color-red">
+                  {{- form.errors | default_errors -}}
+                </div><!-- /.color-red -->
+              {%- endif -%}
+
+              <div class="form-row">
+                {%-
+                  liquid
+                  assign label = 'customer.login.email' | t | append: '*'
+                  assign placeholder = 'customer.login.email_placeholder' | t
+                  assign error = false
+                  assign has_error = false
+                  capture attr
+                    echo 'autocorrect="off"'
+                    echo 'autocapitalize="off"'
+                    echo 'autocomplete="email"'
+                    if form.errors contains 'form'
+                      assign error = form.errors.messages['form']
+                      assign has_error = true
+                    endif
+                  endcapture
+                  render 'text-input', id: 'CustomerEmail', label: label, type: 'email', name: 'customer[email]', placeholder: placeholder, attr: attr, message: error, has_error: has_error, required: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                  assign has_error = nil
+                -%}
+              </div><!-- /.form-row -->
+
+              <div class="form-row">
+                {%-
+                  liquid
+                  assign label = 'customer.login.password' | t | append: '*'
+                  assign placeholder = 'customer.login.password_placeholder' | t
+                  assign error = false
+                  assign has_error = false
+                  capture attr
+                    echo 'autocomplete="current-password"'
+                    if form.errors contains 'form'
+                      assign error = form.errors.messages['form']
+                      assign has_error = true
+                    endif
+                  endcapture
+                  render 'text-input', id: 'CustomerPassword', label: label, type: 'password', name: 'customer[password]', placeholder: placeholder, attr: attr, message: error, has_error: has_error, required: true
+                  assign label = nil
+                  assign placeholder = nil
+                  assign attr = nil
+                  assign has_error = nil
+                -%}
+              </div><!-- /.form-row -->
+
+              <div class="form-row">
+                <div>
+                  {%- assign value = 'customer.login.submit' | t -%}
+                  {%- render 'button', type: 'submit', value: value, style: 'solid', class: 'button' -%}
+                  {%- assign value = nil -%}
+                </div>
+              </div><!-- /.form-row -->
+
+              <div class="form-row">
+                <div>
+                  <a href="#recover" class="link">{{- 'customer.login.forgot_password' | t -}}</a>
+                </div>
+              </div><!-- /.form-row -->
+
+              <div class="form-customer__callout">
+                <h2 class="form-customer__callout-title h3">
+                  {{- 'customer.login.create_account_title' | t -}}
+                </h2><!-- /.form-customer__callout-title h3 -->
+
+                <div>
+                  <a href="{{- routes.account_register_url -}}" class="link">{{- 'customer.login.create_account' | t -}}</a>
+                </div>
+              </div><!-- /.form-customer__callout -->
+            {%- endform -%}
+          </form-validate>
+        </div><!-- /.form-customer__body -->
+      </div><!-- /.container container--small -->
+    </div><!-- /#login.form-customer form-customer--login -->
+  </div><!-- /.account__col -->
+</section><!-- /.account -->
+
+{% schema %}
+{
+  "name": "t:sections.main-login.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image_aside",
+      "label": "t:sections.main-login.settings.image_aside.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.global.settings.header_color_scheme.content"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_text",
+      "label": "t:sections.global.settings.color_scheme_text.label",
+      "options": [
+        {
+          "value": "text-colors-default",
+          "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+        },
+        {
+          "value": "text-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+        },
+        {
+          "value": "text-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+        }
+      ],
+      "default": "text-colors-default"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_background",
+      "label": "t:sections.global.settings.color_scheme_background.label",
+      "options": [
+        {
+          "value": "background-colors-default",
+          "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+        },
+        {
+          "value": "background-colors-secondary",
+          "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+        },
+        {
+          "value": "background-colors-accent-1",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+        },
+        {
+          "value": "background-colors-accent-2",
+          "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+        },
+        {
+          "value": "background-colors-inverse",
+          "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+        }
+      ],
+      "default": "background-colors-default"
+    }
+  ]
+}
+{% endschema %}

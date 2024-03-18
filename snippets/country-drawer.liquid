@@ -1,0 +1,125 @@
+{%- comment -%}
+  Accepts:
+
+  - section {Section}
+  - button_class {String}
+  - button_prepend_text {String}
+  - append_id {String}
+{%- endcomment -%}
+
+{%- assign button_text = localization.country.currency.iso_code | append: '|' | append: localization.country.currency.symbol -%}
+
+{%- if button_prepend_text -%}
+  {%- assign button_text = button_text | prepend: ' ' | prepend: button_prepend_text -%}
+{%- endif -%}
+
+<details id="Country-drawer-{{- append_id -}}" class="drawer__container">
+  <summary
+    class="drawer__button drawer__button--text svg-color-inherit{{ button_class }}"
+    id="Country-drawer-button-{{- append_id -}}"
+    aria-label="{{- 'accessibility.toggle_country_drawer' | t -}}"
+  >
+    <span class="drawer__button-text">
+      {{- button_text -}}
+    </span><!-- /.drawer__button-text -->
+
+    <noscript>
+      {%- render 'icon-arrow-right' -%}
+    </noscript>
+  </summary><!-- /.drawer__button -->
+
+  <div class="drawer__content js-drawer" id="Country-menu-drawer-{{- append_id -}}" tabindex="-1">
+    <button
+      class="drawer__button-close text-current button-reset no-js-hidden js-btn-close-drawer svg-color-inherit"
+      aria-label="{{- 'accessibility.close_country_drawer' | t -}}"
+      aria-controls="Country-menu-drawer-{{- append_id -}}"
+      aria-expanded="false"
+    >
+      {%- render 'icon-arrow-right' -%}
+    </button><!-- /.drawer__button -->
+
+    <div class="drawer__row drawer__row--gutter-sm">
+      {%- if settings.country_drawer_title != blank -%}
+        <h2 class="drawer__title heading-static">
+          {{- settings.country_drawer_title -}}
+        </h2><!-- /.drawer__title -->
+      {%- endif -%}
+
+      {{- settings.country_drawer_content -}}
+    </div><!-- /.drawer__row -->
+
+    {%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+      <div class="drawer__row">
+        <localization-form>
+          {% form 'localization' %}
+            {%- if localization.available_countries.size > 1 -%}
+              <div class="form-row">
+                <div class="select-input">
+                  <label for="country-drawer-selector-{{- append_id -}}" class="select-input__label visually-hidden">
+                    {{- 'localization-form.currency_label' | t -}}
+                  </label>
+
+                  <div class="select-input__wrapper">
+                    <select
+                      name="country_code"
+                      id="country-drawer-selector-{{- append_id -}}"
+                      class="select-input__el"
+                      aria-describedby="a11y-refresh-page-message"
+                    >
+                      {%- for country in localization.available_countries -%}
+                        {%- capture option_text -%}
+                          ({{- country.currency.iso_code -}}|{{- country.currency.symbol -}})
+                        {%- endcapture -%}
+
+                        {%- assign option_text = option_text | prepend: ' ' | prepend: country.name -%}
+
+                        <option value="{{- country.iso_code -}}"{% if localization.country.iso_code == country.iso_code %} selected{% endif %}>
+                          {{- option_text -}}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+
+                    {%- render 'icon-chevron-down' -%}
+                  </div><!-- /.select-input__wrapper -->
+                </div><!-- /.select-input -->
+              </div><!-- /.form-row -->
+            {%- endif -%}
+
+            {%- if localization.available_languages.size > 1 -%}
+              <div class="form-row">
+                <div class="select-input">
+                  <label for="country-drawer-language-{{- append_id -}}" class="select-input__label visually-hidden">
+                    {{- 'localization-form.language_label' | t -}}
+                  </label>
+
+                  <div class="select-input__wrapper">
+                    <select
+                      name="language_code"
+                      id="country-drawer-language-{{- append_id -}}"
+                      class="select-input__el"
+                      aria-describedby="a11y-refresh-page-message"
+                     >
+                      {%- for language in localization.available_languages -%}
+                        <option value="{{- language.iso_code -}}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>
+                          {{- language.endonym_name | capitalize -}}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+
+                    {%- render 'icon-chevron-down' -%}
+                  </div><!-- /.select-input__wrapper -->
+                </div><!-- /.select-input -->
+              </div><!-- /.form-row -->
+            {%- endif -%}
+
+            <div class="form-row no-js">
+              <button type="submit" class="button button--outlined button--full no-js">
+                {{- 'localization-form.submit' | t -}}
+              </button>
+            </div><!-- /.form-row -->
+          {% endform %}
+        </localization-form>
+      </div><!-- /.drawer__row -->
+    {%- endif -%}
+  </div><!-- /#menu-drawer.drawer__content -->
+</details><!-- /#Details-menu-drawer-container.drawer__container -->

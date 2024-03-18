@@ -1,0 +1,88 @@
+custom-select {
+  display: block;
+}
+
+.custom-select__wrapper {
+  --btn-padding: 1.45rem 1.5rem;
+
+  position: relative;
+  color: var(--color-heading-text);
+  font-size: var(--font-size-static-small);
+  line-height: var(--line-height-medium);
+}
+
+.custom-select.is-expanded .custom-select__btn {
+  border-color: currentColor;
+  border-bottom-color: transparent;
+}
+
+.custom-select.is-expanded .custom-select__dropdown {
+  transition-duration: 0s, var(--duration-short);
+  visibility: inherit;
+  opacity: 1;
+}
+
+.custom-select__btn {
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  z-index: 4;
+  color: var(--color-body-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: max-content;
+  background-color: var(--color-body-background);
+  padding: var(--btn-padding);
+  border: .1rem solid var(--color-border-elements);
+  transition: color var(--duration-default), background-color var(--duration-default), border-color var(--duration-default);
+}
+
+.custom-select__btn svg {
+  margin-left: 2.4rem;
+}
+
+.custom-select__btn:disabled {
+  pointer-events: none;
+  border-color: var(--color-heading-text);
+  background-color: var(--color-border-elements);
+}
+
+.custom-select__dropdown {
+  position: absolute;
+  z-index: 3;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: max-content;
+  border: .1rem solid currentColor;
+  border-top: none;
+  background-color: var(--color-body-background);
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility var(--duration-short), opacity var(--duration-short);
+}
+
+.custom-select__option {
+  -webkit-user-select: none;
+  user-select: none;
+  display: block;
+  width: 100%;
+  padding: var(--btn-padding);
+}
+
+.custom-select__option.is-selected {
+  background-color: var(--color-border-elements);
+}
+
+@media (hover: hover) {
+  .custom-select__btn:hover {
+    color: currentColor;
+    border-color: currentColor;
+  }
+
+  .custom-select__option:hover {
+    background-color: var(--color-border-elements);
+  }
+}

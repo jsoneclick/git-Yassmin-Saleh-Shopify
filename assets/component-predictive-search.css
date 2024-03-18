@@ -1,0 +1,106 @@
+.predictive-search__results {
+  margin-top: 3.2rem;
+}
+
+.predictive-search__message {
+  text-align: center;
+}
+
+.predictive-search__message p {
+  font-size: var(--font-size-static-medium);
+}
+
+.predictive-search__row {
+  margin-bottom: 3.2rem;
+}
+
+.predictive-search__row:last-child {
+  margin-bottom: 0;
+}
+
+.predictive-search__title {
+  font-family: var(--font-heading-family);
+  color: var(--color-body-text);
+  font-size: var(--font-size-static-small);
+  line-height: var(--line-height-small);
+  letter-spacing: var(--letter-spacing-medium);
+  text-transform: uppercase;
+  margin: 0 0 1.6rem;
+}
+
+.predictive-search__links {
+  width: max-content;
+  color: var(--color-heading-text);
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+  letter-spacing: var(--letter-spacing-medium);
+  text-transform: uppercase;
+}
+
+.predictive-search__links-item + .predictive-search__links-item {
+  margin-top: 1.6rem;
+}
+
+.predictive-search__links-link {
+  display: block;
+  transition: color var(--duration-default);
+}
+
+.predictive-search__grid {
+  display: grid;
+  align-items: flex-start;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.4rem .2rem;
+}
+
+.predictive-search__card-product .card-product__content {
+  padding-top: .8rem;
+}
+
+.predictive-search__card-product .card-product__title {
+  font-size: calc(var(--font-heading-scale) * 1.2rem);
+}
+
+.predictive-search__link {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+@media (hover: hover) {
+  .predictive-search__links-link:hover {
+    color: var(--color-body-text);
+  }
+
+  .predictive-search__card-product:hover .card-product__media {
+    opacity: 0.7;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .predictive-search__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .predictive-search__results {
+    margin-top: 4rem;
+  }
+
+  .predictive-search__row {
+    margin-bottom: 4rem;
+  }
+
+  .predictive-search__grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 1.6rem;
+  }
+
+  .predictive-search__links {
+    font-family: var(--font-heading-family);
+    line-height: 1.15;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+}

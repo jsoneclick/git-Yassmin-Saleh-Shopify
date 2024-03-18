@@ -1,0 +1,134 @@
+
+{%- if section.blocks.size > 0 -%}
+  {{- 'section-bar.css' | asset_url | stylesheet_tag -}}
+  {{- 'swiper-bundle.min.css' | asset_url | stylesheet_tag -}}
+
+  <script src="{{- 'swiper-bundle.min.js' | asset_url -}}" defer="defer"></script>
+  <script src="{{- 'announcement-bar-slider.js' | asset_url -}}" defer="defer"></script>
+
+  <div class="bar js-announcement-bar {{ section.settings.color_scheme_text }} {{ section.settings.color_scheme_background }}">
+    <div class="container">
+      <div class="bar__inner">
+        {%- if section.blocks.size == 1 -%}
+          {%- assign first_block = section.blocks | first -%}
+
+          {{ first_block.settings.content }}
+        {%- else -%}
+          <announcement-bar-slider class="swiper bar__swiper" data-autoplay-interval="{{- section.settings.slider_autoplay_interval | times: 1000 -}}">
+            <div class="swiper-wrapper">
+              {%- for block in section.blocks -%}
+                {%- if block.settings.content == blank -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                <div class="swiper-slide">
+                  {{ block.settings.content }}
+                </div><!-- /.swiper-slide -->
+              {%- endfor -%}
+            </div><!-- /.swiper-wrapper -->
+          </announcement-bar-slider><!-- /.swiper -->
+        {%- endif -%}
+      </div><!-- /.bar__inner -->
+    </div><!-- /.container -->
+  </div><!-- /.bar -->
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "t:sections.announcement-bar.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.global.settings.header_color_scheme.content"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_text",
+        "label": "t:sections.global.settings.color_scheme_text.label",
+        "options": [
+          {
+            "value": "text-colors-default",
+            "label": "t:sections.global.settings.color_scheme_text.options.default.label"
+          },
+          {
+            "value": "text-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_text.options.secondary.label"
+          },
+          {
+            "value": "text-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_text.options.inverse.label"
+          }
+        ],
+        "default": "text-colors-default"
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_background",
+        "label": "t:sections.global.settings.color_scheme_background.label",
+        "options": [
+          {
+            "value": "background-colors-default",
+            "label": "t:sections.global.settings.color_scheme_background.options.default.label"
+          },
+          {
+            "value": "background-colors-secondary",
+            "label": "t:sections.global.settings.color_scheme_background.options.secondary.label"
+          },
+          {
+            "value": "background-colors-accent-1",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_one.label"
+          },
+          {
+            "value": "background-colors-accent-2",
+            "label": "t:sections.global.settings.color_scheme_background.options.accent_two.label"
+          },
+          {
+            "value": "background-colors-inverse",
+            "label": "t:sections.global.settings.color_scheme_background.options.inverse.label"
+          },
+          {
+            "value": "background-colors-light",
+            "label": "t:sections.global.settings.color_scheme_background.options.light.label"
+          }
+        ],
+        "default": "background-colors-accent-1"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.announcement-bar.settings.header_slider.content",
+        "info": "t:sections.announcement-bar.settings.header_slider.info"
+      },
+      {
+        "type": "range",
+        "id": "slider_autoplay_interval",
+        "min": 2,
+        "max": 6,
+        "step": 0.5,
+        "unit": "s",
+        "label": "t:sections.announcement-bar.settings.slider_autoplay_interval.label",
+        "default": 3
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text-slide",
+        "name": "t:sections.announcement-bar.blocks.text-slide.name",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "t:sections.announcement-bar.blocks.text-slide.settings.content.label",
+            "default": "<p>Welcome to our store</p>"
+          }
+        ]
+      }
+    ],
+    "default": {
+      "blocks": [
+        {
+          "type": "text-slide"
+        }
+      ]
+    }
+  }
+{% endschema %}

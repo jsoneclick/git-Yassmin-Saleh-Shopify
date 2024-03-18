@@ -1,0 +1,250 @@
+{%- style -%}
+  {%- liquid
+    assign body_font_light = settings.type_body_font | font_modify: 'weight', 'light'
+    assign body_font_normal = settings.type_body_font | font_modify: 'weight', 'normal'
+    assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+    assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+    assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+
+    assign theme_js_animations_on_mobile = 'fade-in 800ms forwards paused'
+    if settings.disable_animations_on_mobile
+      assign theme_js_animations_on_mobile = 'none'
+    endif
+  %}
+
+  {{ settings.type_body_font | font_face: font_display: 'swap' }}
+  {{ body_font_light | font_face: font_display: 'swap' }}
+  {{ body_font_normal | font_face: font_display: 'swap' }}
+  {{ body_font_bold | font_face: font_display: 'swap' }}
+  {{ body_font_italic | font_face: font_display: 'swap' }}
+  {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+  {{ settings.type_heading_font | font_face: font_display: 'swap' }}
+  {{ settings.type_button_font | font_face: font_display: 'swap' }}
+
+  :root {
+    --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    --font-body-style: {{ settings.type_body_font.style }};
+    --font-body-weight: {{ settings.type_body_font.weight }};
+
+    --font-heading-family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
+    --font-heading-style: {{ settings.type_heading_font.style }};
+    --font-heading-weight: {{ settings.type_heading_font.weight }};
+
+    --font-button-family: {{ settings.type_button_font.family }}, {{ settings.type_button_font.fallback_families }};
+    --font-button-style: {{ settings.type_button_font.style }};
+    --font-button-weight: {{ settings.type_button_font.weight }};
+
+    --font-heading-letter-spacing: {{ settings.heading_letter_spacing }};
+    --font-heading-text-transform: {{ settings.heading_text_transform }};
+
+    --font-body-scale: {{ settings.body_font_scale | divided_by: 100.0 }};
+    --font-heading-scale: {{ settings.heading_font_scale | divided_by: 100.0 }};
+
+    --font-weight-normal: {{ body_font_normal.weight }};
+    --font-weight-bold: {{ body_font_bold.weight }};
+    --font-weight-light: {{ body_font_light.weight }};
+
+    --line-height-extra-small: 1;
+    --line-height-small: 1.3;
+    --line-height-medium: 1.6;
+
+    --letter-spacing-extra-small: .05rem;
+    --letter-spacing-small: .1rem;
+    --letter-spacing-medium: .2rem;
+
+    --font-size-extra-small: 1rem;
+    --font-size-small: 1.2rem;
+    --font-size-medium: 1.4rem;
+    --font-size-large: 1.6rem;
+    --font-size-extra-large: 1.8rem;
+
+    --font-size-static-extra-small: 1rem;
+    --font-size-static-small: 1.2rem;
+    --font-size-static-medium: 1.4rem;
+    --font-size-static-large: 1.6rem;
+    --font-size-static-extra-large: 1.8rem;
+
+    /* Typography */
+    --color-heading-text: {{ settings.color_heading_text }};
+    --color-body-text: {{ settings.color_body_text }};
+
+    /* Buttons and links */
+    --color-button-outlined-text: {{ settings.color_button_outlined_text }};
+    --color-button-outlined-background: {{ settings.color_button_outlined_background }};
+    --color-button-filled-text: {{ settings.color_button_filled_text }};
+    --color-button-filled-background: {{ settings.color_button_filled_background }};
+
+    --color-button-background: transparent;
+    --color-button-outline: {{ settings.color_button_filled_text }};
+    --color-button-text: {{ settings.color_button_filled_text }};
+
+    --color-form-text: {{ settings.color_button_outlined_text }};
+    --color-form-button-text: {{ settings.color_button_filled_text }};
+
+    --button-border-radius: {{ settings.button_border_radius }};
+    --button-text-transform: {{ settings.button_text_transform }};
+    --input-border-radius: {{ settings.input_border_radius }};
+
+    /* Other elements */
+    --color-link: {{ settings.color_link }};
+    --color-link-text: {{ settings.color_text_primary }};
+    --color-default-link-text: {{ settings.color_text_primary }};
+    --color-tag-text: {{ settings.color_tag_text }};
+    --color-tag-background: {{ settings.color_tag_background }};
+    --color-border-elements: {{ settings.color_border_elements }};
+    --color-cart-number-text: {{ settings.color_text_primary }};
+    --color-shipping-bar-progress: {{ settings.color_progressbar }};
+
+    /* Backgrounds */
+    --color-body-background: {{ settings.color_background_body }};
+    --color-image-background: {{ settings.color_image_background }};
+    --color-body-background-transparent-50: {{ settings.color_background_body | color_modify: 'alpha', 0.5 }};
+    --color-popup-background: {{ settings.color_popup_background }};
+
+    /* Background Colors */
+    --color-background-primary: {{ settings.color_background_primary }};
+    --color-background-inverse: {{ settings.color_background_inverse }};
+    --color-background-light: {{ settings.color_background_light }};
+    --color-background-dark: {{ settings.color_background_dark }};
+    --color-background-accent-1: {{ settings.color_background_accent_1 }};
+    --color-background-accent-2: {{ settings.color_background_accent_2 }};
+
+    /* Text Colors */
+    --color-text-primary: {{ settings.color_text_primary }};
+    --color-text-secondary: {{ settings.color_text_secondary }};
+    --color-text-inverse: {{ settings.color_text_inverse }};
+
+    /* Text default */
+    --color-heading-text-default: {{ settings.color_heading_text }};
+    --color-body-text-default: {{ settings.color_body_text }};
+
+    --color-link-text-default: {{ settings.color_text_primary }};
+    --color-default-link-text-default: {{ settings.color_text_primary }};
+
+    /* Text secondary */
+    --color-heading-text-secondary: {{ settings.color_text_secondary }};
+    --color-body-text-secondary: {{ settings.color_text_secondary }};
+
+    /* Text inverse */
+    --color-heading-text-inverse: {{ settings.color_text_inverse }};
+    --color-body-text-inverse: {{ settings.color_text_inverse }};
+
+    --color-link-text-inverse: {{ settings.color_text_inverse }};
+    --color-default-link-text-inverse: {{ settings.color_text_inverse }};
+
+    /* Default section style */
+    --color-default-background: {{ settings.color_background_body }};
+    --color-default-image-background: {{ settings.color_image_background }};
+    --color-default-border-elements: {{ settings.color_border_elements }};
+
+    /* Secondary section style */
+    --color-secondary-background: {{ settings.color_text_secondary }};
+    --color-secondary-image-background: {{ settings.color_background_accent_1 }};
+    --color-secondary-border-elements: {{ settings.color_border_elements }};
+
+    --color-button-hover-text: var(--color-button-text-inverse);
+    --color-button-hover-outline: var(--color-button-outline);
+    --color-button-hover-background: var(--color-button-outline);
+
+    --color-success: #6BBD4F;
+    --color-alert: #FAC151;
+    --color-error: #D84339;
+    --color-price-accent: #CD9B77;
+
+    --color-white: #fff;
+    --color-black: #111;
+    --color-light: #ddd;
+
+    --gradient-black: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%);
+    --gradient-overlay-horizontal: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+    --color-popup-overlay: rgba(0, 0, 0, 0.5);
+
+    --page-width: 1440px;
+    --page-width-md: 880px;
+    --page-width-xs: 656px;
+    --page-gutter: 2.4rem;
+
+    --section-vertical-padding: 7.6rem;
+    --section-vertical-padding-desktop: 9.6rem;
+
+    --section-spacing-unit-desktop: 1.6rem;
+    --section-spacing-unit-mobile:  1.2rem;
+
+    --duration-short: 200ms;
+    --duration-default: 300ms;
+    --duration-long: 400ms;
+    --duration-extra-long: 600ms;
+
+    --z-header: 800;
+    --z-modals: 900;
+
+    --header-top-position: calc(var(--header-height) + var(--announcement-bar-top));
+
+    --card-media-padding: {{ settings.card_product_image_ratio }};
+
+    --collection-sidebar-top: 0;
+
+    --theme-js-animations-on-mobile: {{ theme_js_animations_on_mobile }};
+  }
+
+  {% if settings.disable_animations_on_mobile %} disable-animations{% endif %}
+
+  @media screen and (min-width: 750px) {
+    :root {
+      --font-size-extra-small: 1.2rem;
+      --font-size-small: 1.4rem;
+      --font-size-medium: 1.6rem;
+      --font-size-large: 1.8rem;
+      --font-size-extra-large: 2rem;
+
+      --page-gutter: 3.6rem;
+
+      --section-vertical-padding: 8.6rem;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    :root {
+      --page-gutter: 4rem;
+
+      --section-vertical-padding: 9.6rem;
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    :root {
+      --page-gutter: 5.6rem;
+    }
+  }
+  {%- comment -%}
+    Swatches
+  {%- endcomment -%}
+
+  {%- assign colors_codes = settings.swatches_hex_codes | newline_to_br | strip_newlines | split: '<br />' -%}
+  {%- for color_code in colors_codes -%}
+    {% liquid
+      assign color_code_array = color_code | split: '|'
+      assign swatch_name = color_code_array | first | handle
+      assign color_value = color_code_array | last
+      assign css_value = ''
+      capture swatch_value
+        unless color_value contains '.'
+          assign css_value = color_value
+          echo 'background-color: ' | append: color_value | append: ';'
+        else
+          assign swatch_image_url = color_value | file_img_url: '36x'
+          assign css_value = 'url(' | append: swatch_image_url | append: ')'
+          echo 'background-image: ' | append: css_value | append: ';'
+        endunless
+      endcapture
+    %}
+
+    :root {
+      --color-swatch-{{ swatch_name }}: {{ css_value }};
+    }
+
+    .swatch--{{ swatch_name }} {
+      {{ swatch_value }}
+    }
+  {%- endfor -%}
+{%- endstyle -%}

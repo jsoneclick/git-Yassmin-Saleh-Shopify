@@ -1,0 +1,13 @@
+.form-contact {
+  color: var(--color-body-text);
+  background-color: var(--color-body-background);
+  padding: 2.4rem 0;
+}
+
+.shopify-section:first-child .form-contact {
+  padding-top: 6.4rem;
+}
+
+* + .shopify-section .form-contact {
+  padding-top: 0;
+}

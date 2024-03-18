@@ -1,0 +1,42 @@
+.search-hero {
+  background-color: var(--color-body-background);
+  padding: var(--section-vertical-padding-desktop) 0;
+  text-align: center;
+}
+
+.search-hero__title {
+  margin: 0 0 1.2rem;
+}
+
+.search-hero__title:last-child {
+  margin-bottom: 0;
+}
+
+.search-hero__title > span {
+  display: block;
+}
+
+.search-hero__title-small {
+  text-transform: capitalize;
+  margin-bottom: 1.2rem;
+}
+
+@media screen and (max-width: 749px) {
+  .search-hero__title {
+    line-height: var(--line-height-small);
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .search-hero {
+    padding: 3.2rem 0 9rem;
+  }
+
+  .search-hero__breadcrumbs {
+    margin-bottom: 6.4rem;
+  }
+
+  .search-hero__breadcrumbs ul {
+    justify-content: center;
+  }
+}

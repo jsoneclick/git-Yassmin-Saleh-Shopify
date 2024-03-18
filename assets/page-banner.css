@@ -1,0 +1,62 @@
+.template--list-collections .page-banner {
+  padding: var(--section-vertical-padding) 0;
+}
+
+.page-banner {
+  background-color: var(--color-body-background);
+  padding: 4rem 0 3.2rem;
+}
+
+.page-banner--padding-lg-mobile {
+  padding: 6.4rem 0;
+}
+
+.page-banner__title {
+  color: var(--color-heading-text);
+  margin: 0;
+}
+
+.page-banner__entry {
+  color: var(--color-body-text);
+  margin: 1.6rem 0 0;
+}
+
+.page-banner__entry p:last-child {
+  margin-bottom: 0;
+}
+
+.page-banner__entry p:first-child {
+  margin-top: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .template--list-collections .page-banner {
+    padding: 3.2rem 0 9rem;
+  }
+
+  .page-banner {
+    padding: 3.2rem 0 9.6rem;
+  }
+
+  .page-banner__breadcrumbs ul {
+    justify-content: center;
+  }
+
+  .page-banner__breadcrumbs + .page-banner__title {
+    margin-top: 6.4rem;
+  }
+
+  .page-banner__title:first-child:not(:only-child) {
+    margin-top: 3.2rem;
+  }
+
+  .page-banner__entry {
+    margin: 2.4rem 0 0;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .page-banner__breadcrumbs--spacing-lg + .page-banner__title {
+    margin-top: 8.5rem;
+  }
+}

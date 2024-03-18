@@ -1,0 +1,38 @@
+announcement-bar-slider {
+  display: block;
+}
+
+.bar {
+  color: var(--color-heading-text);
+  font-size: var(--font-size-static-extra-small);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: var(--letter-spacing-small);
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: var(--color-body-background);
+  padding: .8rem 0;
+}
+
+.bar p {
+  margin: 0 0 1rem;
+}
+
+.bar p:last-child {
+  margin-bottom: 0;
+}
+
+.bar__swiper .swiper-wrapper {
+  align-items: center;
+}
+
+html.no-js .bar__swiper .swiper-wrapper {
+  display: grid;
+  row-gap: .8rem;
+}
+
+@media screen and (min-width: 750px) {
+  .bar {
+    padding: 1.2rem 0;
+  }
+}

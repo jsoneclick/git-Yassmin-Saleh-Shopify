@@ -1,0 +1,38 @@
+{%- comment -%}
+  Accepts:
+
+  - section {Section}
+  - button_class {String}
+  - append_id {String}
+{%- endcomment -%}
+
+<desktop-drawer class="drawer">
+  <details id="Search-drawer-{{- append_id -}}" class="drawer__container">
+    <summary
+      class="drawer__button svg-color-inherit{{ button_class }}"
+      id="Search-drawer-button-{{- append_id -}}"
+      aria-label="{{- 'accessibility.toggle_search_drawer' | t -}}"
+    >
+      {%- render 'icon-search' -%}
+
+      <noscript>
+        {%- render 'icon-arrow-right' -%}
+      </noscript>
+    </summary><!-- /.drawer__button -->
+
+    <div class="drawer__content js-drawer" id="Search-menu-drawer-{{- append_id -}}" tabindex="-1">
+      <button
+        class="drawer__button-close button-reset svg-color-inherit small-hide medium-hide no-js-hidden js-btn-close-drawer"
+        aria-label="{{- 'accessibility.close_search_drawer' | t -}}"
+        aria-controls="Search-menu-drawer-{{- append_id -}}"
+        aria-expanded="false"
+      >
+        {%- render 'icon-arrow-right' -%}
+      </button><!-- /.drawer__button -->
+
+      <div class="drawer__row">
+        {%- render 'search', with input_id: 'desktop', input_class: ' js-drawer-focus-element' -%}
+      </div><!-- /.drawer__row -->
+    </div><!-- /#menu-drawer.drawer__content -->
+  </details><!-- /#Details-menu-drawer-container.drawer__container -->
+</desktop-drawer><!-- /.drawer header__drawer -->
